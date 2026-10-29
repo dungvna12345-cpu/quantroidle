@@ -11,7 +11,7 @@ signal area_changed(area_id: String)       # mở khóa khu / mua trang trí
 signal current_area_changed(area_id: String)
 signal quests_changed
 signal coin_fx(world_pos: Vector2, amount: float)
-signal toast(text: String)
+signal toast(text: String, icon: String)
 signal tutorial_event(event_id: String)
 signal purchased(kind: String)
 signal rush_requested(count: int)
@@ -398,7 +398,7 @@ func start_fever(duration: float = 30.0) -> void:
 	fever_time = maxf(fever_time, duration)
 	fever_started.emit(duration)
 	AudioManager.play("levelup")
-	show_toast("🔥 GIỜ VÀNG BÙNG NỔ! THU NHẬP x3! 🔥")
+	show_toast("GIỜ VÀNG BÙNG NỔ! THU NHẬP x3!", "bolt")
 
 
 func is_fever() -> bool:
@@ -845,7 +845,7 @@ func can_afford(cost: float) -> bool:
 
 func try_spend(cost: float) -> bool:
 	if not can_afford(cost):
-		toast.emit("Không đủ vàng!")
+		show_toast("Không đủ vàng!")
 		return false
 	gold -= cost
 	gold_changed.emit(gold)
@@ -854,7 +854,7 @@ func try_spend(cost: float) -> bool:
 
 func try_spend_diamonds(n: int) -> bool:
 	if diamonds < n:
-		toast.emit("Không đủ kim cương!")
+		show_toast("Không đủ kim cương!")
 		return false
 	diamonds -= n
 	diamonds_changed.emit(diamonds)
@@ -933,8 +933,9 @@ func request_coin_fx(world_pos: Vector2, amount: float) -> void:
 	coin_fx.emit(world_pos, amount)
 
 
-func show_toast(text: String) -> void:
-	toast.emit(text)
+## icon: id ảnh trong assets/ui (để trống = không icon).
+func show_toast(text: String, icon: String = "") -> void:
+	toast.emit(text, icon)
 
 
 func fire_tutorial(event_id: String) -> void:
@@ -1028,7 +1029,7 @@ func upgrade_dish(id: String, n: int = 1) -> bool:
 
 func hire(id: String) -> bool:
 	if not staff_unlocked(id):
-		toast.emit("Cần cấp quán %d" % int(staff_data[id]["unlock_level"]))
+		show_toast("Cần cấp quán %d" % int(staff_data[id]["unlock_level"]))
 		return false
 	if staff_count(id) >= int(staff_data[id]["max_count"]):
 		return false
@@ -1042,7 +1043,7 @@ func hire(id: String) -> bool:
 
 func upgrade_staff(id: String, n: int = 1) -> bool:
 	if staff_count(id) <= 0:
-		toast.emit("Hãy thuê nhân viên trước")
+		show_toast("Hãy thuê nhân viên trước")
 		return false
 	if not try_spend(staff_upgrade_cost(id, n)):
 		return false
@@ -1056,7 +1057,7 @@ func hire_manager() -> bool:
 	if manager:
 		return false
 	if not staff_unlocked("manager"):
-		toast.emit("Cần cấp quán %d" % int(staff_data["manager"]["unlock_level"]))
+		show_toast("Cần cấp quán %d" % int(staff_data["manager"]["unlock_level"]))
 		return false
 	if not try_spend(manager_cost()):
 		return false
@@ -1080,14 +1081,14 @@ func unlock_area(id: String) -> bool:
 	if area_unlocked(id):
 		return false
 	if level < int(a["unlock_level"]):
-		toast.emit("Cần cấp quán %d" % int(a["unlock_level"]))
+		show_toast("Cần cấp quán %d" % int(a["unlock_level"]))
 		return false
 	if not try_spend(area_unlock_cost(id)):
 		return false
 	areas[id]["unlocked"] = true
 	_bought("area")
 	area_changed.emit(id)
-	toast.emit("Đã mở khu " + str(a["name"]) + "!")
+	show_toast("Đã mở khu " + str(a["name"]) + "!", "icon_home")
 	return true
 
 
@@ -1160,14 +1161,14 @@ func shop_buy(item: Dictionary) -> bool:
 		"boost":
 			var now: float = Time.get_unix_time_from_system()
 			boost_until = maxf(now, boost_until) + float(item["minutes"]) * 60.0
-			toast.emit("Thu nhập x2 đã bật!")
+			show_toast("Thu nhập x2 đã bật!")
 		"rush":
 			rush_requested.emit(int(item["count"]))
-			toast.emit("Khách đang kéo đến!")
+			show_toast("Khách đang kéo đến!")
 		"gold":
 			var g := shop_gold_amount(item)
 			add_gold(g)
-			toast.emit("+" + NumberFormat.fmt(g) + " vàng")
+			show_toast("+" + NumberFormat.fmt(g) + " vàng", "coin")
 	purchased.emit("shop")
 	state_changed.emit()
 	return true
@@ -1353,7 +1354,7 @@ func start_event(id: String) -> void:
 	current_event = ev
 	event_left = float(ev["duration"])
 	event_started.emit(ev)
-	toast.emit(str(ev["name"]) + " " + str(ev["desc"]))
+	show_toast(str(ev["name"]) + " " + str(ev["desc"]), "icon_event")
 
 
 func event_active(id: String) -> bool:
@@ -1459,7 +1460,7 @@ func claim_order(i: int) -> bool:
 	var royal := order_is_royal(i)
 	if royal:
 		add_diamonds(int(chapter_feature().get("bonus_diamonds", 5)))
-		toast.emit("👑 Ngự yến thành công! Hoàng gia ban thưởng hậu hĩnh!")
+		show_toast("Ngự yến thành công! Hoàng gia ban thưởng hậu hĩnh!", "prestige")
 	add_daily("order", 1)
 	# đơn Ngự yến xong thì ngay chỗ đó mở đơn Ngự yến mới (không đụng tiến độ các đơn khác)
 	orders[i] = _make_royal(_new_order()) if royal else _new_order()
@@ -1603,11 +1604,11 @@ func feature_status() -> String:
 	var f := chapter_feature()
 	match str(f.get("id", "")):
 		"morning_rush":
-			return "🍜 PHỞ SÁNG: ĐẶC SẢN x%s" % NumberFormat.fmt_dec(float(f.get("specialty_mult", 2.0)))
+			return "PHỞ SÁNG: ĐẶC SẢN x%s" % NumberFormat.fmt_dec(float(f.get("specialty_mult", 2.0)))
 		"lantern_night":
-			return "🏮 ĐÊM HỘI ĐÈN LỒNG: GIÁ +%d%%" % int(round((float(f.get("price_mult", 1.4)) - 1.0) * 100.0))
+			return "ĐÊM HỘI ĐÈN LỒNG: GIÁ +%d%%" % int(round((float(f.get("price_mult", 1.4)) - 1.0) * 100.0))
 		"cold_snap":
-			return "❄️ SƯƠNG LẠNH: MÓN NÓNG x%s (%ds)" % [NumberFormat.fmt_dec(float(f.get("price_mult", 2.0))), int(ceil(_feature_left))]
+			return "SƯƠNG LẠNH: MÓN NÓNG x%s (%ds)" % [NumberFormat.fmt_dec(float(f.get("price_mult", 2.0))), int(ceil(_feature_left))]
 	return ""
 
 
@@ -1635,7 +1636,7 @@ func _update_feature(delta: float) -> void:
 		_feature_was_active = active
 		chapter_feature_changed.emit(active)
 		if active:
-			toast.emit("✨ %s bắt đầu!" % str(f.get("name", "")))
+			show_toast("%s bắt đầu!" % str(f.get("name", "")), "sparkle")
 
 
 ## Sài Gòn: tiền nhận được khi chạm shipper.
@@ -1650,7 +1651,7 @@ func claim_delivery() -> float:
 	add_daily("earn", g)
 	if randf() < float(chapter_feature().get("diamond_chance", 0.1)):
 		add_diamonds(1)
-		toast.emit("🛵 Khách boa shipper 1 kim cương!")
+		show_toast("Khách boa shipper 1 kim cương!", "diamond")
 	return g
 
 
@@ -1660,7 +1661,7 @@ func _watch_clock() -> void:
 	if now + 300.0 < max_time_seen:
 		if not time_tampered:
 			time_tampered = true
-			toast.emit("Đồng hồ máy bị chỉnh lùi, quà theo ngày tạm khóa")
+			show_toast("Đồng hồ máy bị chỉnh lùi, quà theo ngày tạm khóa")
 		return
 	time_tampered = false
 	max_time_seen = maxf(max_time_seen, now)
@@ -1805,7 +1806,7 @@ func unlock_wing(area_id: String, wing_id: String) -> bool:
 	if w.is_empty() or wing_unlocked(area_id, wing_id) or wing_building(area_id, wing_id):
 		return false
 	if level < int(w.get("unlock_level", 1)):
-		toast.emit("Cần cấp quán %d" % int(w["unlock_level"]))
+		show_toast("Cần cấp quán %d" % int(w["unlock_level"]))
 		return false
 	if not try_spend(wing_cost(area_id, wing_id)):
 		return false
@@ -1815,7 +1816,7 @@ func unlock_wing(area_id: String, wing_id: String) -> bool:
 	areas[area_id]["wings"] = wd
 	_bought("wing")
 	area_changed.emit(area_id)
-	toast.emit("Bắt đầu thi công: " + str(w["name"]) + "! Chạm công trường để xây nhanh")
+	show_toast("Bắt đầu thi công: " + str(w["name"]) + "! Chạm công trường để xây nhanh", "icon_upgrade")
 	return true
 
 
@@ -1837,7 +1838,7 @@ func register_combo(world_pos: Vector2) -> int:
 		start_fever(20.0)
 		AudioManager.play("celebrate")
 		AudioManager.vibrate(40)
-		show_toast("🔥 COMBO ĐẠT x%d! KÍCH HOẠT GIỜ VÀNG FEVER THẦN TỐC x3! 🔥" % combo)
+		show_toast("COMBO ĐẠT x%d! KÍCH HOẠT GIỜ VÀNG FEVER THẦN TỐC x3!" % combo, "bolt")
 	return combo
 
 

@@ -1,6 +1,8 @@
 extends TabBase
 ## Tab Mở rộng: 4 khu (mở bằng vàng), trang trí cho khu đang xem, tái khởi nghiệp.
 
+const ChapterThemeScript := preload("res://scripts/ui/ChapterTheme.gd")
+const ChapterMapScript := preload("res://scripts/ui/ChapterMap.gd")
 const ConfirmScene := preload("res://scenes/ui/ConfirmPopup.tscn")
 
 var _area_cards: Array[UpgradeCard] = []
@@ -12,7 +14,7 @@ var _wing_title: Label
 var _wing_box: VBoxContainer
 var _wing_cards: Array[UpgradeCard] = []
 var _prestige_title: Label
-var _map: ChapterMap
+var _map: Control
 var _chapter_card: UpgradeCard
 var _feature_icon: TextureRect
 var _feature_title: Label
@@ -24,7 +26,7 @@ func _build() -> void:
 	var list := UIKit.tab_sheet(self, "MỞ RỘNG", "Mở khu mới, trang trí, và đưa quán sang thành phố mới")
 	list.add_child(UIKit.section("Hành trình quán (chương)"))
 	_sel_chapter = GameState.chapter
-	_map = ChapterMap.new()
+	_map = ChapterMapScript.new()
 	_map.selected.connect(_on_map_selected)
 	list.add_child(_map)
 	_chapter_card = UpgradeCard.new()
@@ -250,7 +252,7 @@ func _refresh_chapter() -> void:
 	_feature_icon.texture = Sprites.tex(str(f.get("icon", "star")))
 	_feature_title.text = "Đặc trưng: " + str(f.get("name", ""))
 	_feature_desc.text = str(f.get("desc", ""))
-	_feature_title.add_theme_color_override("font_color", ChapterTheme.color("accent", i))
+	_feature_title.add_theme_color_override("font_color", ChapterThemeScript.color("accent", i))
 
 
 func _on_chapter(_idx: int, i: int, _card: UpgradeCard) -> void:

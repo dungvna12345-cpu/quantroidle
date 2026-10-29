@@ -25,7 +25,7 @@ func _ready() -> void:
 	
 	# Nhãn danh hiệu Thương Buôn
 	var tag := Label.new()
-	tag.text = "THƯƠNG BUÔN 🎁"
+	tag.text = "THƯƠNG BUÔN"
 	tag.theme_type_variation = "WhiteLabel"
 	tag.add_theme_font_size_override("font_size", 18)
 	tag.add_theme_color_override("font_color", Color("ffd700"))

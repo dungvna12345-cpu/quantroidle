@@ -13,11 +13,11 @@ var _perks_vbox: VBoxContainer
 var _t: float = 0.0
 
 const PERKS := [
-	{"level": 1, "icon": "🐾", "title": "Bé Mèo Lanh Lợi", "desc": "Tự động nhặt tiền boa khách để lại trên bàn ăn."},
-	{"level": 2, "icon": "✨", "title": "Hút Khách Đại Tài", "desc": "Tăng 20% cơ hội xuất hiện Khách Sộp & Đại Gia VIP."},
-	{"level": 3, "icon": "🧹", "title": "Gom Tiền Thần Tốc", "desc": "Mỗi 15 giây tự động gom sạch toàn bộ tiền boa trên các bàn."},
-	{"level": 4, "icon": "🚨", "title": "Vệ Sĩ Quán Trọ", "desc": "Phát hiện và dọa tên trộm vàng bỏ chạy tức thì!"},
-	{"level": 5, "icon": "👑", "title": "Mèo Hoàng Kim", "desc": "Ban phước lành +15% toàn bộ doanh thu vĩnh viễn!"}
+	{"level": 1, "icon": "coin", "title": "Bé Mèo Lanh Lợi", "desc": "Tự động nhặt tiền boa khách để lại trên bàn ăn."},
+	{"level": 2, "icon": "icon_customers", "title": "Hút Khách Đại Tài", "desc": "Tăng 20% cơ hội xuất hiện Khách Sộp & Đại Gia VIP."},
+	{"level": 3, "icon": "gold_bag", "title": "Gom Tiền Thần Tốc", "desc": "Mỗi 15 giây tự động gom sạch toàn bộ tiền boa trên các bàn."},
+	{"level": 4, "icon": "lock", "title": "Vệ Sĩ Quán Trọ", "desc": "Phát hiện và dọa tên trộm vàng bỏ chạy tức thì!"},
+	{"level": 5, "icon": "prestige", "title": "Mèo Hoàng Kim", "desc": "Ban phước lành +15% toàn bộ doanh thu vĩnh viễn!"}
 ]
 
 func _init() -> void:
@@ -70,16 +70,16 @@ func _build(b: VBoxContainer) -> void:
 	act_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	b.add_child(act_row)
 
-	_feed_btn = UIKit.button("Cho Ăn Cá Tươi 🐟", "GreenButton", "", 270)
+	_feed_btn = UIKit.button("Cho Ăn Cá Tươi", "GreenButton", "", 270)
 	_feed_btn.pressed.connect(_on_feed)
 	act_row.add_child(_feed_btn)
 
-	_play_btn = UIKit.button("Chơi Cuộn Len 🧶", "OrangeButton", "", 270)
+	_play_btn = UIKit.button("Chơi Cuộn Len", "OrangeButton", "", 270)
 	_play_btn.pressed.connect(_on_play)
 	act_row.add_child(_play_btn)
 
 	# 4. Danh sách Đặc Quyền Thần Tài
-	var perk_title := centered_label("🌟 ĐẶC QUYỀN THẦN TÀI MỞ KHÓA", "SideLabel", 19)
+	var perk_title := centered_label("ĐẶC QUYỀN THẦN TÀI MỞ KHÓA", "SideLabel", 19)
 	b.add_child(perk_title)
 
 	var scroll := ScrollContainer.new()
@@ -113,7 +113,7 @@ func _refresh_ui() -> void:
 	_exp_label.text = "%d / %d Cảm Tình" % [int(cur_xp), int(max_xp)]
 	
 	var cost := _get_feed_cost()
-	_feed_btn.text = "Cho Ăn Cá 🐟 (%s)" % NumberFormat.fmt(cost)
+	_feed_btn.text = "Cho Ăn Cá (%s)" % NumberFormat.fmt(cost)
 	_feed_btn.disabled = GameState.gold < cost
 	
 	# Cập nhật danh sách đặc quyền
@@ -134,8 +134,7 @@ func _refresh_ui() -> void:
 		var rh := UIKit.hbox(12)
 		row.add_child(rh)
 		
-		var icon_lbl := UIKit.label(str(p["icon"]), "", 32)
-		rh.add_child(icon_lbl)
+		rh.add_child(UIKit.icon(str(p["icon"]), 48))
 		
 		var rv := UIKit.vbox(2)
 		rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -160,10 +159,10 @@ func _on_feed() -> void:
 	if GameState.add_pet_xp(35.0):
 		AudioManager.play("levelup")
 		AudioManager.play("legendary", 0.2)
-		GameState.toast.emit("🐾 Mèo Chiêu Tài đã lên CẤP %d! Mở khóa đặc quyền mới!" % GameState.pet_level)
+		GameState.show_toast("Mèo Chiêu Tài đã lên CẤP %d! Mở khóa đặc quyền mới!" % GameState.pet_level, "heart")
 		GameState.add_diamonds(10)
 	else:
-		GameState.toast.emit("🐾 Meo meo! Mèo cưng rất thích cá tươi (+35 Cảm tình)!")
+		GameState.show_toast("Meo meo! Mèo cưng rất thích cá tươi (+35 Cảm tình)!", "heart")
 		
 	if UIKit.main:
 		UIKit.main.call("burst_sparkles", panel.get_global_rect().get_center(), 14)
@@ -175,12 +174,12 @@ func _on_play() -> void:
 		return
 
 	AudioManager.play("pop")
-	GameState.toast.emit("🧶 Mèo cưng vờn cuộn len! Toàn quán phấn khởi phục vụ nhanh x2 (30s)!")
+	GameState.show_toast("Mèo cưng vờn cuộn len! Toàn quán phấn khởi phục vụ nhanh x2 (30s)!", "heart")
 	GameState.trigger_rush(10)
 
 	if GameState.add_pet_xp(20.0):
 		AudioManager.play("levelup")
-		GameState.toast.emit("🐾 Mèo Chiêu Tài đã lên CẤP %d!" % GameState.pet_level)
+		GameState.show_toast("Mèo Chiêu Tài đã lên CẤP %d!" % GameState.pet_level, "heart")
 		
 	if UIKit.main:
 		UIKit.main.call("burst_sparkles", panel.get_global_rect().get_center(), 10)

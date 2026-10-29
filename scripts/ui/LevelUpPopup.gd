@@ -125,7 +125,7 @@ func _build(b: VBoxContainer) -> void:
 	b.add_child(reward_card)
 
 	# Nút hành động
-	var ok := UIKit.button("TUYỆT VỜI! ✨", "RedButton", "", 320)
+	var ok := UIKit.button("TUYỆT VỜI!", "RedButton", "", 320)
 	ok.custom_minimum_size = Vector2(320, 80)
 	ok.add_theme_font_size_override("font_size", 30)
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

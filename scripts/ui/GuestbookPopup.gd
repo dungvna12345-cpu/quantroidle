@@ -60,7 +60,7 @@ func _refresh_list() -> void:
 		var name_l := UIKit.label(str(g.get("name")), "HeaderLabel", 21)
 		name_row.add_child(name_l)
 
-		var fav_l := UIKit.label("❤️ Món ruột: " + str(g.get("fav_dish")), "SmallLabel", 16)
+		var fav_l := UIKit.label("Món ruột: " + str(g.get("fav_dish")), "SmallLabel", 16)
 		fav_l.modulate = Color("e07a3f")
 		info_v.add_child(fav_l)
 
@@ -76,7 +76,7 @@ func _refresh_list() -> void:
 		info_v.add_child(story_l)
 
 		# Đặc quyền kết thân
-		var perk_l := UIKit.label("✨ Đặc quyền: " + str(g.get("perk")), "GreenLabel", 16)
+		var perk_l := UIKit.label("Đặc quyền: " + str(g.get("perk")), "GreenLabel", 16)
 		info_v.add_child(perk_l)
 
 		# Tiến độ kết thân
@@ -94,7 +94,7 @@ func _refresh_list() -> void:
 
 		var btn: JuicyButton
 		if GameState.guest_claimed.has(gid):
-			btn = UIKit.button("ĐÃ NHẬN  ✓", "BlueButton", "", 140)
+			btn = UIKit.button("ĐÃ NHẬN", "BlueButton", "check", 140)
 			btn.disabled = true
 		elif cur >= req:
 			btn = UIKit.button("NHẬN  %d" % dias, "GreenButton", "diamond", 150)
@@ -110,7 +110,7 @@ func _claim(gid: String, dias: int) -> void:
 	GameState.add_diamonds(dias)
 	AudioManager.play("levelup", 0.15)
 	AudioManager.play("coin", 0.1)
-	GameState.show_toast("ĐÃ KẾT THÂN! Nhận +%d Kim Cương! 💎" % dias)
+	GameState.show_toast("ĐÃ KẾT THÂN! Nhận +%d Kim Cương!" % dias, "diamond")
 	SaveManager.save_game()
 	if UIKit.main:
 		for i in 8:

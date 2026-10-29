@@ -1,5 +1,6 @@
-class_name ChapterMap
 extends Control
+
+const ChapterThemeScript := preload("res://scripts/ui/ChapterTheme.gd")
 ## Bản đồ hành trình dọc Việt Nam: mỗi chương là một điểm dừng (data/chapters.json -> "map_pos"),
 ## nối với nhau theo thứ tự chơi. Chương đã qua có dấu tích, chương hiện tại phát sáng,
 ## chương sau bị khoá. Chạm vào một điểm để xem chi tiết (tín hiệu `selected`).
@@ -119,7 +120,7 @@ func _route_points(a: Vector2, b: Vector2) -> PackedVector2Array:
 func _draw_route(a: Vector2, b: Vector2, done: bool) -> void:
 	var pts := _route_points(a, b)
 	if done:
-		draw_polyline(pts, ChapterTheme.accent(), 7.0, true)
+		draw_polyline(pts, ChapterThemeScript.accent(), 7.0, true)
 		return
 	# đường nét đứt chạy dần cho chặng chưa đi
 	var offset: int = int(_t * 4.0) % 2
@@ -135,7 +136,7 @@ func _draw_stop(i: int, font: Font) -> void:
 	var done := i < g.chapter
 	var current := i == g.chapter
 	var r: float = NODE_R * (1.15 if i == selected_index else 1.0)
-	var ring: Color = Color("5aa86a") if done else (ChapterTheme.color("header", i) if current else Color("b9ada0"))
+	var ring: Color = Color("5aa86a") if done else (ChapterThemeScript.color("header", i) if current else Color("b9ada0"))
 	if current:
 		var pulse: float = 0.5 + 0.5 * sin(_t * 3.0)
 		draw_circle(c, r + 10.0 + pulse * 8.0, Color(ring, 0.25 * (1.0 - pulse) + 0.1))
@@ -167,4 +168,4 @@ func _draw_stop(i: int, font: Font) -> void:
 		var tag := "Bạn đang ở đây"
 		var tp := pos + Vector2(0, 26)
 		draw_string_outline(font, tp, tag, align, w, 18, 6, Color("fffaf0"))
-		draw_string(font, tp, tag, align, w, 18, ChapterTheme.color("accent", i))
+		draw_string(font, tp, tag, align, w, 18, ChapterThemeScript.color("accent", i))

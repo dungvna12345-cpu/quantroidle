@@ -73,7 +73,7 @@ func _setup_weather(w: WeatherType) -> void:
 					"speed": randf_range(450.0, 650.0),
 					"length": randf_range(16.0, 28.0)
 				})
-			GameState.show_toast("🌧️ MƯA RÀO PHỐ CỔ: Thực khách ghé quán trú mưa thưởng thức món nóng sốt!")
+			GameState.show_toast("MƯA RÀO PHỐ CỔ: Thực khách ghé quán trú mưa thưởng thức món nóng sốt!", "icon_event")
 			AudioManager.play("whoosh")
 		WeatherType.FIREFLIES:
 			for i in 20:

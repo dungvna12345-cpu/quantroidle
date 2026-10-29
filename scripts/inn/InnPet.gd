@@ -59,7 +59,7 @@ func _auto_collect_tips() -> void:
 			count += 1
 			t.collect_tip()
 	if count > 0:
-		say("Meo! Đã gom tiền boa giúp sen! 🐾")
+		say("Meo! Đã gom tiền boa giúp sen!")
 		show_bubble("face_heart")
 		Juice.bounce(self, 1.25)
 		AudioManager.play("coin", 0.1)
@@ -107,23 +107,23 @@ func pet_interaction() -> void:
 	var bonus: float = maxf(88.0, GameState.income_rate() * 12.0)
 	GameState.add_gold(bonus)
 
-	var meows := ["Meo meo~ 🐾", "Gừ gừ... sướng quá!", "Meo! Chúc quán phát tài!", "Meo meo nựng thích ghê!"]
+	var meows := ["Meo meo~", "Gừ gừ... sướng quá!", "Meo! Chúc quán phát tài!", "Meo meo nựng thích ghê!"]
 	say(meows[randi() % meows.size()])
 
 	if GameState.add_pet_xp(25.0):
 		AudioManager.play("levelup", 0.15)
 		var perks := [
 			"",
-			"Mèo được tặng Nón Lá Tre Chibi! 👒",
-			"Mở khóa Kỹ năng Tự Gom Tiền Boa! 💰",
-			"Mở khóa Giác Quan Báo Động Bắt Trộm! 🚨",
-			"Mở khóa Hào Quang Vàng: +15% Doanh Thu Toàn Quán! ✨"
+			"Mèo được tặng Nón Lá Tre Chibi!",
+			"Mở khóa Kỹ năng Tự Gom Tiền Boa!",
+			"Mở khóa Giác Quan Báo Động Bắt Trộm!",
+			"Mở khóa Hào Quang Vàng: +15% Doanh Thu Toàn Quán!"
 		]
 		GameState.show_toast("MÈO LÊN CẤP %d! %s" % [GameState.pet_level, perks[GameState.pet_level - 1]])
 	else:
 		if _pet_count % 5 == 0:
 			GameState.add_diamonds(1)
-			GameState.show_toast("Mèo Chiêu Tài tặng bạn +1 Kim Cương! 💎")
+			GameState.show_toast("Mèo Chiêu Tài tặng bạn +1 Kim Cương!", "diamond")
 		else:
 			GameState.show_toast("+%s Vàng từ Mèo Chiêu Tài!" % NumberFormat.fmt(bonus))
 

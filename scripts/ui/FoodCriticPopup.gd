@@ -74,8 +74,7 @@ func _build(b: VBoxContainer) -> void:
 	_star_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	card_v.add_child(_star_box)
 	for i in range(5):
-		var star_lbl := UIKit.label("⭐", "", 32)
-		_star_box.add_child(star_lbl)
+		_star_box.add_child(UIKit.icon("star", 40))
 
 	_review_quote = UIKit.label(str(_selected_review["quote"]), "SmallLabel", 20)
 	_review_quote.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -100,7 +99,7 @@ func _build(b: VBoxContainer) -> void:
 	rh.add_child(r_text)
 
 	# 4. Nút Nhận Chứng Nhận
-	_claim_btn = UIKit.button("Vinh Danh & Nhận Quà 🎖️", "GreenButton", "", 360)
+	_claim_btn = UIKit.button("Vinh Danh & Nhận Quà", "GreenButton", "", 360)
 	_claim_btn.pressed.connect(_on_claim)
 	b.add_child(_claim_btn)
 
@@ -155,7 +154,7 @@ func _on_claim() -> void:
 	var bonus_gold: float = maxf(100000.0, GameState.income_rate() * 60.0)
 	GameState.add_gold(bonus_gold)
 	
-	GameState.toast.emit("⭐ Bài báo ẩm thực đã đăng tải! Lượng khách kéo đến nườm nượp (+%d KC)!" % gems)
+	GameState.show_toast("Bài báo ẩm thực đã đăng tải! Lượng khách kéo đến nườm nượp (+%d KC)!" % gems, "star")
 	GameState.trigger_rush(18)
 	
 	if UIKit.main:

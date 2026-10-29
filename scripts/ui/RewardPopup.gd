@@ -77,7 +77,7 @@ func _build(b: VBoxContainer) -> void:
 		grid.add_child(tile)
 		_tiles.append(tile)
 	# nút nhận
-	_ok = UIKit.button("NHẬN TẤT CẢ ✨", "RedButton", "", 320)
+	_ok = UIKit.button("NHẬN TẤT CẢ", "RedButton", "", 320)
 	_ok.custom_minimum_size = Vector2(320, 84)
 	_ok.add_theme_font_size_override("font_size", 32)
 	_ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

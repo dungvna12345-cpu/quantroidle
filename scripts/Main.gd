@@ -15,6 +15,7 @@ const TAB_ICONS: Array[String] = ["icon_customers", "icon_staff", "icon_pot", "i
 const NAV_ORDER: Array[int] = [2, 1, 0, 3, 4]
 const TAB_EVENTS: Array[String] = ["tab_inn", "tab_staff", "tab_menu", "tab_expand", "tab_quest"]
 
+const ChapterThemeScript := preload("res://scripts/ui/ChapterTheme.gd")
 const OfflineScene := preload("res://scenes/ui/OfflinePopup.tscn")
 const LevelUpScene := preload("res://scenes/ui/LevelUpPopup.tscn")
 const SettingsScene := preload("res://scenes/ui/SettingsPopup.tscn")
@@ -41,8 +42,8 @@ const PetPopupScript := preload("res://scripts/ui/PetPopup.gd")
 const FoodCriticScript := preload("res://scripts/ui/FoodCriticPopup.gd")
 const FortuneStormScript := preload("res://scripts/ui/FortuneStormPopup.gd")
 
-const TOP_H := 138.0
-const TAB_H := 170.0
+const TOP_H := 86.0
+const TAB_H := 148.0
 
 @onready var world: InnWorld = $World
 @onready var root: Control = $UI/Root
@@ -57,9 +58,11 @@ var tabs: Array[Control] = []
 var tab_buttons: Array[JuicyButton] = []
 var tab_labels: Array[Label] = []
 var home_nav_btn: JuicyButton
+var menu_nav_btn: JuicyButton
+var expand_nav_btn: JuicyButton
 var staff_nav_btn: JuicyButton
-var center_nav_btn: JuicyButton
 var quest_nav_btn: JuicyButton
+var center_nav_btn: JuicyButton
 var settings_nav_btn: JuicyButton
 var nav_fade: TextureRect
 var quest_badge: PanelContainer
@@ -81,7 +84,7 @@ var _switching: bool = false
 func _ready() -> void:
 	UIKit.main = self
 	# bảng màu giao diện theo chương (scene được nạp lại mỗi khi sang chương)
-	ChapterTheme.apply()
+	ChapterThemeScript.apply()
 	_compute_safe_area()
 	_build_content()
 	_build_top_bar()
@@ -151,78 +154,79 @@ func _build_top_bar() -> void:
 	var top := Control.new()
 	top.name = "TopBar"
 	top.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	top.offset_top = 8.0 + _safe_top
+	top.offset_top = 4.0 + _safe_top
 	top.offset_bottom = TOP_H + _safe_top
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(top)
 
-	# 1. Avatar tròn
+	# 1. Avatar tròn (viền gỗ mộc sang trọng)
 	var av := UIKit.button("", "IconButton", "avatar")
 	av.icon = Sprites.ui(GameState.avatar)
 	avatar_button = av
-	av.add_theme_constant_override("icon_max_width", 96)
-	av.position = Vector2(8, 6)
-	av.size = Vector2(96, 96)
-	av.custom_minimum_size = Vector2(96, 96)
+	av.add_theme_constant_override("icon_max_width", 72)
+	av.position = Vector2(8, 4)
+	av.size = Vector2(72, 72)
+	av.custom_minimum_size = Vector2(72, 72)
 	av.pressed.connect(open_settings)
 	top.add_child(av)
 
-	# 2. Level Capsule [ ⭐ CẤP 28 ] theo Concept A
+	# 2. Level Badge gắn liền kề avatar
 	var lv_pill := PanelContainer.new()
 	lv_pill.theme_type_variation = "LevelPill"
-	lv_pill.position = Vector2(110, 16)
-	lv_pill.size = Vector2(136, 52)
-	lv_pill.custom_minimum_size = Vector2(136, 52)
+	lv_pill.position = Vector2(86, 10)
+	lv_pill.size = Vector2(120, 44)
+	lv_pill.custom_minimum_size = Vector2(120, 44)
 	top.add_child(lv_pill)
-	var lvh := UIKit.hbox(6)
+	var lvh := UIKit.hbox(4)
 	lvh.alignment = BoxContainer.ALIGNMENT_CENTER
 	lv_pill.add_child(lvh)
-	var star := UIKit.icon("star", 34)
+	var star := UIKit.icon("star", 24)
 	star.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	lvh.add_child(star)
-	level_num = UIKit.label("CẤP %d" % GameState.level, "ResourceLabel", 22)
+	level_num = UIKit.label("CẤP %d" % GameState.level, "ResourceLabel", 18)
 	level_num.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	lvh.add_child(level_num)
 
 	# Thanh EXP nhỏ gọn dưới capsule cấp
 	exp_bar = ProgressBar.new()
 	exp_bar.theme_type_variation = "ExpBar"
-	exp_bar.position = Vector2(112, 74)
-	exp_bar.size = Vector2(132, 10)
+	exp_bar.position = Vector2(88, 58)
+	exp_bar.size = Vector2(116, 8)
 	exp_bar.show_percentage = false
 	exp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(exp_bar)
 
-	# 3. Gold Pill [ 🪙 3.5M (+) ]
+	# 3. Gold Pill [ 🪙 122M (+) ]
 	gold_pill = ResourcePillScene.instantiate()
 	gold_pill.icon_id = "coin"
-	gold_pill.position = Vector2(252, 12)
-	gold_pill.size = Vector2(220, 64)
-	gold_pill.custom_minimum_size = Vector2(220, 64)
+	gold_pill.position = Vector2(244, 8)
+	gold_pill.size = Vector2(220, 56)
+	gold_pill.custom_minimum_size = Vector2(220, 56)
 	gold_pill.plus_pressed.connect(open_shop)
 	top.add_child(gold_pill)
 
 	# 4. Diamond Pill [ 💎 1,250 (+) ]
 	diamond_pill = ResourcePillScene.instantiate()
 	diamond_pill.icon_id = "diamond"
-	diamond_pill.position = Vector2(480, 12)
-	diamond_pill.size = Vector2(188, 64)
-	diamond_pill.custom_minimum_size = Vector2(188, 64)
+	diamond_pill.position = Vector2(476, 8)
+	diamond_pill.size = Vector2(192, 56)
+	diamond_pill.custom_minimum_size = Vector2(192, 56)
 	diamond_pill.plus_pressed.connect(open_shop)
 	top.add_child(diamond_pill)
 
-	# 5. Dải trạng thái màu xanh Sage dưới thanh tài nguyên [ TRẠNG THÁI: RẤT BẬN ]
+	# 5. Dải trạng thái đặc biệt (chỉ hiện khi có giờ vàng / sự kiện)
 	var status_box := PanelContainer.new()
 	status_box.name = "StatusBanner"
 	status_box.theme_type_variation = "StatusBanner"
 	status_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	status_box.offset_left = -160
-	status_box.offset_right = 160
-	status_box.offset_top = 88
-	status_box.offset_bottom = 126
+	status_box.offset_left = -170
+	status_box.offset_right = 170
+	status_box.offset_top = 70
+	status_box.offset_bottom = 106
 	status_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	status_box.visible = false
 	top.add_child(status_box)
-	var stat_lbl := UIKit.label("TRẠNG THÁI: RẤT BẬN", "StatusLabel", 18)
+	var stat_lbl := UIKit.label("", "StatusLabel", 16)
 	stat_lbl.name = "StatusLabel"
 	stat_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stat_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -233,7 +237,7 @@ func _build_content() -> void:
 	content = Control.new()
 	content.set_anchors_preset(Control.PRESET_FULL_RECT)
 	content.offset_top = TOP_H + _safe_top
-	content.offset_bottom = -(TAB_H + _safe_bottom - 30.0)
+	content.offset_bottom = -(TAB_H + _safe_bottom - 20.0)
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(content)
 	for scene in TAB_SCENES:
@@ -244,14 +248,14 @@ func _build_content() -> void:
 
 
 func _build_tab_bar() -> void:
-	# dải nền mờ dần phía sau hàng nút (chỉ hiện ở các tab danh sách) để nội dung không bị cắt cụt
+	# Dải nền mờ bảo vệ nội dung
 	var grad := Gradient.new()
-	grad.set_color(0, Color(0.98, 0.91, 0.81, 0.0))
-	grad.set_color(1, Color(0.98, 0.91, 0.81, 1.0))
+	grad.set_color(0, Color(0.24, 0.13, 0.08, 0.0))
+	grad.set_color(1, Color(0.24, 0.13, 0.08, 0.85))
 	var gt := GradientTexture2D.new()
 	gt.gradient = grad
 	gt.fill_from = Vector2(0.5, 0.0)
-	gt.fill_to = Vector2(0.5, 0.55)
+	gt.fill_to = Vector2(0.5, 0.6)
 	gt.width = 8
 	gt.height = 128
 	nav_fade = TextureRect.new()
@@ -264,59 +268,99 @@ func _build_tab_bar() -> void:
 	nav_fade.visible = false
 	root.add_child(nav_fade)
 
-	# Thanh điều hướng Concept A: 4 thẻ kem viền nâu ấm + nút tròn san hô ở giữa
+	# Đế gỗ thanh điều hướng
+	var dock_bg := PanelContainer.new()
+	dock_bg.theme_type_variation = "NavBar"
+	dock_bg.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	dock_bg.offset_top = -(TAB_H + _safe_bottom - 16.0)
+	dock_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(dock_bg)
+
+	# Hàng 5 Tab chính
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	bar.offset_top = -(TAB_H + _safe_bottom)
-	bar.offset_bottom = -(10.0 + _safe_bottom)
+	bar.offset_bottom = -(8.0 + _safe_bottom)
 	bar.alignment = BoxContainer.ALIGNMENT_CENTER
-	bar.add_theme_constant_override("separation", 8)
+	bar.add_theme_constant_override("separation", 6)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(bar)
 
-	# 1. TRANG CHỦ (Tab 0)
-	home_nav_btn = _build_nav_card("icon_home", "TRANG CHỦ", _on_tab_pressed.bind(0))
+	# 1. QUÁN (Tab 0)
+	home_nav_btn = _build_nav_card("tab_inn", "QUÁN", _on_tab_pressed.bind(0))
 	bar.add_child(home_nav_btn)
 
-	# 2. NHÂN VIÊN (Tab 1)
-	staff_nav_btn = _build_nav_card("icon_staff", "NHÂN VIÊN", _on_tab_pressed.bind(1))
+	# 2. THỰC ĐƠN (Tab 2)
+	menu_nav_btn = _build_nav_card("tab_menu", "THỰC ĐƠN", _on_tab_pressed.bind(2))
+	bar.add_child(menu_nav_btn)
+
+	# 3. MỞ RỘNG (Tab 3)
+	expand_nav_btn = _build_nav_card("tab_expand", "MỞ RỘNG", _on_tab_pressed.bind(3))
+	bar.add_child(expand_nav_btn)
+
+	# 4. NHÂN VIÊN (Tab 1)
+	staff_nav_btn = _build_nav_card("tab_staff", "NHÂN VIÊN", _on_tab_pressed.bind(1))
 	bar.add_child(staff_nav_btn)
 
-	# 3. BẮT ĐẦU (Nút tròn nổi bật giữa: Tô Phở Bò nóng hổi)
-	center_nav_btn = _build_nav_center()
-	bar.add_child(center_nav_btn)
-
-	# 4. THÀNH TÍCH (Tab 4 - Nhiệm vụ / Thành tựu)
-	quest_nav_btn = _build_nav_card("icon_trophy", "THÀNH TÍCH", _on_tab_pressed.bind(4))
+	# 5. NHIỆM VỤ (Tab 4)
+	quest_nav_btn = _build_nav_card("tab_quest", "NHIỆM VỤ", _on_tab_pressed.bind(4))
 	bar.add_child(quest_nav_btn)
-
-	# 5. CÀI ĐẶT
-	settings_nav_btn = _build_nav_card("gear", "CÀI ĐẶT", open_settings)
-	bar.add_child(settings_nav_btn)
 
 	# Mảng quản lý tab cho hệ thống hướng dẫn & logic game
 	tab_buttons.resize(5)
 	tab_buttons[0] = home_nav_btn
 	tab_buttons[1] = staff_nav_btn
-	tab_buttons[2] = null
-	tab_buttons[3] = null
+	tab_buttons[2] = menu_nav_btn
+	tab_buttons[3] = expand_nav_btn
 	tab_buttons[4] = quest_nav_btn
 
 	# Huy hiệu chấm đỏ báo nhiệm vụ nhận thưởng
 	quest_badge = UIKit.panel("Badge")
 	quest_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	quest_badge_label = UIKit.label("0", "WhiteLabel", 18)
+	quest_badge_label = UIKit.label("0", "WhiteLabel", 15)
 	quest_badge.add_child(quest_badge_label)
 	quest_nav_btn.add_child(quest_badge)
-	quest_badge.position = Vector2(82, 4)
+	quest_badge.position = Vector2(88, 4)
+
+	# Nút nổi "GIỜ VÀNG" (Fever / Rush)
+	center_nav_btn = JuicyButton.new()
+	center_nav_btn.name = "FeverButton"
+	center_nav_btn.custom_minimum_size = Vector2(80, 80)
+	center_nav_btn.size = Vector2(80, 80)
+	center_nav_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	center_nav_btn.offset_left = -96
+	center_nav_btn.offset_right = -16
+	center_nav_btn.offset_top = -(TAB_H + _safe_bottom + 80.0)
+	center_nav_btn.offset_bottom = -(TAB_H + _safe_bottom)
+	center_nav_btn.pressed.connect(_on_center_button_pressed)
+	root.add_child(center_nav_btn)
+
+	var fvb := UIKit.vbox(1)
+	fvb.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fvb.alignment = BoxContainer.ALIGNMENT_CENTER
+	fvb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center_nav_btn.add_child(fvb)
+
+	var fic := TextureRect.new()
+	fic.texture = Sprites.ui("dish_pho")
+	fic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	fic.custom_minimum_size = Vector2(40, 40)
+	fvb.add_child(fic)
+
+	var flb := UIKit.label("GIỜ VÀNG", "WhiteLabel", 12)
+	flb.add_theme_constant_override("outline_size", 4)
+	flb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	fvb.add_child(flb)
+	_style_nav_center(center_nav_btn)
 
 
 func _build_nav_card(icon_id: String, text: String, on_click: Callable) -> JuicyButton:
 	var b := JuicyButton.new()
-	b.custom_minimum_size = Vector2(118, 106)
+	b.custom_minimum_size = Vector2(132, 94)
 	b.size_flags_vertical = Control.SIZE_SHRINK_END
 	b.pressed.connect(on_click)
-	var vb := UIKit.vbox(3)
+	var vb := UIKit.vbox(2)
 	vb.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vb.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -326,37 +370,13 @@ func _build_nav_card(icon_id: String, text: String, on_click: Callable) -> Juicy
 	ic.texture = Sprites.ui(icon_id)
 	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	ic.custom_minimum_size = Vector2(46, 46)
+	ic.custom_minimum_size = Vector2(42, 42)
 	vb.add_child(ic)
-	var lb := UIKit.label(text, "NavLabel", 15)
+	var lb := UIKit.label(text, "NavLabel", 14)
 	lb.name = "Label"
 	lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(lb)
 	_style_nav_card(b, false)
-	return b
-
-
-func _build_nav_center() -> JuicyButton:
-	var b := JuicyButton.new()
-	b.custom_minimum_size = Vector2(134, 134)
-	b.size_flags_vertical = Control.SIZE_SHRINK_END
-	b.pressed.connect(_on_center_button_pressed)
-	var vb := UIKit.vbox(2)
-	vb.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vb.alignment = BoxContainer.ALIGNMENT_CENTER
-	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(vb)
-	var ic := TextureRect.new()
-	ic.texture = Sprites.ui("dish_pho")
-	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	ic.custom_minimum_size = Vector2(56, 56)
-	vb.add_child(ic)
-	var lb := UIKit.label("BẮT ĐẦU", "WhiteLabel", 16)
-	lb.add_theme_constant_override("outline_size", 4)
-	lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(lb)
-	_style_nav_center(b)
 	return b
 
 
@@ -367,15 +387,18 @@ func _style_nav_card(b: Button, sel: bool) -> void:
 	for st_name in ["normal", "hover", "pressed", "disabled"]:
 		var st := StyleBoxTexture.new()
 		st.texture = Sprites.ui(tex_id)
-		st.content_margin_top = 8.0
-		st.content_margin_bottom = 8.0
-		st.content_margin_left = 6.0
-		st.content_margin_right = 6.0
+		st.content_margin_top = 6.0
+		st.content_margin_bottom = 6.0
+		st.content_margin_left = 4.0
+		st.content_margin_right = 4.0
 		b.add_theme_stylebox_override(st_name, st)
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	var lb: Label = b.find_child("Label", true, false)
 	if lb:
-		lb.add_theme_color_override("font_color", Color("d6513d") if sel else Color("4a2c1d"))
+		lb.add_theme_color_override("font_color", Color("c0392b") if sel else Color("4a2810"))
+	var ic: TextureRect = b.find_child("Icon", true, false)
+	if ic:
+		ic.modulate = Color(1.0, 1.0, 1.0) if sel else Color(0.85, 0.80, 0.75)
 
 
 func _style_nav_center(b: Button) -> void:
@@ -384,8 +407,8 @@ func _style_nav_center(b: Button) -> void:
 	for st_name in ["normal", "hover", "pressed", "disabled"]:
 		var st := StyleBoxTexture.new()
 		st.texture = Sprites.ui("nav_circle_coral")
-		st.content_margin_top = 6.0
-		st.content_margin_bottom = 10.0
+		st.content_margin_top = 4.0
+		st.content_margin_bottom = 8.0
 		b.add_theme_stylebox_override(st_name, st)
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
@@ -401,7 +424,7 @@ func _on_center_button_pressed() -> void:
 		a.cheer_all()
 	GameState.start_fever(25.0)
 	sparkle_at(center_nav_btn.global_position)
-	GameState.toast.emit("🔥 GIỜ VÀNG BÙNG NỔ! PHỤC VỤ THẦN TỐC x3! 🔥")
+	GameState.show_toast("GIỜ VÀNG BÙNG NỔ! PHỤC VỤ THẦN TỐC x3!", "bolt")
 
 
 func _build_layers() -> void:
@@ -453,14 +476,12 @@ func _select_tab(i: int, instant: bool = false) -> void:
 		AudioManager.play("whoosh")
 	nav_fade.visible = i != 0
 	_style_nav_card(home_nav_btn, i == 0)
+	_style_nav_card(menu_nav_btn, i == 2)
+	_style_nav_card(expand_nav_btn, i == 3)
 	_style_nav_card(staff_nav_btn, i == 1)
 	_style_nav_card(quest_nav_btn, i == 4)
-	if i == 0 and home_nav_btn:
-		Juice.bounce(home_nav_btn, 1.1)
-	elif i == 1 and staff_nav_btn:
-		Juice.bounce(staff_nav_btn, 1.1)
-	elif i == 4 and quest_nav_btn:
-		Juice.bounce(quest_nav_btn, 1.1)
+	if i >= 0 and i < tab_buttons.size() and tab_buttons[i]:
+		Juice.bounce(tab_buttons[i], 1.1)
 	GameState.fire_tutorial(TAB_EVENTS[i])
 
 
@@ -470,6 +491,8 @@ func _select_tab(i: int, instant: bool = false) -> void:
 
 func _process(_delta: float) -> void:
 	world.input_enabled = current_tab == 0 and popup_layer.get_child_count() == 0 and not _switching
+	if center_nav_btn:
+		center_nav_btn.visible = current_tab == 0
 	# cốt truyện: hiện cảnh chờ khi màn hình rảnh (không có popup / hướng dẫn)
 	if Story.has_pending() and popup_layer.get_child_count() == 0 and tutorial_layer.get_child_count() == 0 \
 			and not _switching:
@@ -481,21 +504,18 @@ func _process(_delta: float) -> void:
 
 
 func _update_status_banner() -> void:
+	var status_box: Control = root.find_child("StatusBanner", true, false)
 	var stat_lbl: Label = root.find_child("StatusLabel", true, false)
-	if not stat_lbl:
+	if not stat_lbl or not status_box:
 		return
 	if GameState.is_fever():
-		stat_lbl.text = "🔥 GIỜ VÀNG BÙNG NỔ! THU NHẬP x3 (%ds) 🔥" % int(ceil(GameState.fever_left()))
+		status_box.visible = true
+		stat_lbl.text = "🔥 GIỜ VÀNG BÙNG NỔ! THU NHẬP x3 (%ds)" % int(ceil(GameState.fever_left()))
 	elif not GameState.current_event.is_empty():
-		stat_lbl.text = "SỰ KIỆN: " + str(GameState.current_event.get("name", "ĐANG DIỄN RA")).to_upper()
-	elif not GameState.feature_status().is_empty():
-		stat_lbl.text = GameState.feature_status()
-	elif GameState.is_evening():
-		stat_lbl.text = "TRẠNG THÁI: GIỜ CAO ĐIỂM (TỐI)"
-	elif GameState.boost_active():
-		stat_lbl.text = "TRẠNG THÁI: TĂNG TỐC x2"
+		status_box.visible = true
+		stat_lbl.text = "🏮 SỰ KIỆN: " + str(GameState.current_event.get("name", "ĐANG DIỄN RA")).to_upper()
 	else:
-		stat_lbl.text = "TRẠNG THÁI: RẤT BẬN"
+		status_box.visible = false
 
 
 func _notification(what: int) -> void:
@@ -577,14 +597,14 @@ func _on_combo(n: int, world_pos: Vector2) -> void:
 		sparkle_at(sp)
 		AudioManager.play("levelup", 0.08)
 	if n >= 10 and not GameState.is_fever():
-		GameState.show_toast("🔥 ĐẠI TIỆC CUNG ĐÌNH! TOÀN QUÁN THU NHẬP x3! 🔥")
+		GameState.show_toast("ĐẠI TIỆC CUNG ĐÌNH! TOÀN QUÁN THU NHẬP x3!", "bolt")
 		GameState.start_fever(18.0)
 		AudioManager.play("legendary")
 		AudioManager.vibrate(60)
 		for i in 12:
 			sparkle_at(sp + Vector2(randf_range(-120, 120), randf_range(-140, 40)))
 	elif n == 20 or n == 30:
-		GameState.show_toast("🐉 RỒNG VÀNG GIÁNG THẾ! COMBO x%d! 🐉" % n)
+		GameState.show_toast("RỒNG VÀNG GIÁNG THẾ! COMBO x%d!" % n, "bolt")
 		var rate: float = GameState.income_rate()
 		GameState.add_gold(rate * 15.0 + 888.0)
 		AudioManager.play("legendary")
@@ -734,14 +754,26 @@ func go_to_area(id: String) -> void:
 	t.tween_callback(func() -> void: _switching = false)
 
 
-func show_toast(text: String) -> void:
+func show_toast(text: String, icon_id: String = "") -> void:
 	if _toast and is_instance_valid(_toast):
 		_toast.queue_free()
 	_toast = UIKit.panel("Toast")
 	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var row := UIKit.hbox(12)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_toast.add_child(row)
+	if not icon_id.is_empty():
+		row.add_child(UIKit.icon(icon_id, 44))
 	var l := UIKit.label(text, "WhiteLabel", 24)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_toast.add_child(l)
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	# chữ dài thì xuống dòng thay vì tràn ra ngoài màn hình
+	var max_w: float = (root.get_viewport_rect().size.x if root else 720.0) - 120.0 - (56.0 if not icon_id.is_empty() else 0.0)
+	var font := l.get_theme_font("font")
+	if font and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x > max_w:
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size.x = max_w
+	row.add_child(l)
 	toast_layer.add_child(_toast)
 	_toast.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_toast.grow_horizontal = Control.GROW_DIRECTION_BOTH

@@ -32,167 +32,184 @@ var _hint: JuicyButton
 var _hint_action: Callable = Callable()
 
 
+const ActivityHubScript := preload("res://scripts/ui/ActivityHubPopup.gd")
+
 func _build() -> void:
-	# --- tên khu ở giữa
+	# --- Biển hiệu tên khu ở giữa (kiểu biển gỗ truyền thống)
 	var top := HBoxContainer.new()
 	top.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	top.offset_left = -200
-	top.offset_right = 200
-	top.offset_top = 0
-	top.offset_bottom = 68
+	top.offset_left = -180
+	top.offset_right = 180
+	top.offset_top = 16
+	top.offset_bottom = 76
 	top.alignment = BoxContainer.ALIGNMENT_CENTER
 	top.add_theme_constant_override("separation", 6)
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(top)
+
 	_left = _arrow("arrow_left", -1)
 	top.add_child(_left)
-	var pill := UIKit.panel("AreaPill")
-	pill.custom_minimum_size = Vector2(250, 0)
+
+	var pill := PanelContainer.new()
+	pill.theme_type_variation = "AreaPill"
+	pill.custom_minimum_size = Vector2(230, 58)
 	top.add_child(pill)
-	var pv := UIKit.vbox(-8)
+
+	var pv := UIKit.vbox(-6)
+	pv.alignment = BoxContainer.ALIGNMENT_CENTER
+	pv.set_anchors_preset(Control.PRESET_FULL_RECT)
 	pill.add_child(pv)
-	_name_label = UIKit.label("", "ResourceLabel", 24)
+
+	_name_label = UIKit.label("", "ResourceLabel", 22)
 	_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pv.add_child(_name_label)
-	_sub_label = UIKit.label("", "SmallLabel", 16)
-	_sub_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	pv.add_child(_sub_label)
+
+	_rate_label = UIKit.label("", "SmallLabel", 14)
+	_rate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pv.add_child(_rate_label)
+
+	var pill_btn := UIKit.button("", "IconButton", "")
+	pill_btn.set_anchors_preset(Control.PRESET_FULL_RECT)
+	pill_btn.pressed.connect(_open_goals)
+	pill.add_child(pill_btn)
+
 	_right = _arrow("arrow_right", 1)
 	top.add_child(_right)
 
-	_rate_label = UIKit.label("", "SideLabel", 17)
-	_rate_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_rate_label.offset_left = -160
-	_rate_label.offset_right = 160
-	_rate_label.offset_top = 68
-	_rate_label.offset_bottom = 96
-	_rate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_child(_rate_label)
-
-	# --- sao mục tiêu chương (bấm để xem)
+	# --- Sao mục tiêu chương (gắn gọn gàng ngay dưới biển hiệu)
 	var goal_btn := UIKit.button("", "IconButton", "")
 	goal_btn.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	goal_btn.offset_left = -84
-	goal_btn.offset_right = 84
-	goal_btn.offset_top = 96
-	goal_btn.offset_bottom = 142
+	goal_btn.offset_left = -60
+	goal_btn.offset_right = 60
+	goal_btn.offset_top = 68
+	goal_btn.offset_bottom = 96
 	goal_btn.pressed.connect(_open_goals)
 	add_child(goal_btn)
-	var stars := UIKit.hbox(2)
+	var stars := UIKit.hbox(4)
 	stars.set_anchors_preset(Control.PRESET_FULL_RECT)
 	stars.alignment = BoxContainer.ALIGNMENT_CENTER
 	stars.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	goal_btn.add_child(stars)
 	for i in 3:
-		var s := UIKit.icon("star_empty", 40)
+		var s := UIKit.icon("star_empty", 24)
 		stars.add_child(s)
 		_goal_stars.append(s)
 
-	# --- góc trái: thẻ món đặc biệt gọn gàng + nút Bộ sưu tập
+	# --- Cột trái: NÚT PHÚC LỢI & HOẠT ĐỘNG (Gộp 8 minigame, vòng quay, rút quẻ)
+	var act_btn := JuicyButton.new()
+	act_btn.theme_type_variation = "SideCard"
+	act_btn.position = Vector2(14, 8)
+	act_btn.size = Vector2(82, 82)
+	act_btn.custom_minimum_size = Vector2(82, 82)
+	act_btn.pressed.connect(_open_activity_hub)
+	add_child(act_btn)
+	var avb := UIKit.vbox(2)
+	avb.set_anchors_preset(Control.PRESET_FULL_RECT)
+	avb.alignment = BoxContainer.ALIGNMENT_CENTER
+	avb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	act_btn.add_child(avb)
+	var aic := TextureRect.new()
+	aic.texture = Sprites.ui("gift")
+	aic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	aic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	aic.custom_minimum_size = Vector2(40, 40)
+	avb.add_child(aic)
+	var alb := UIKit.label("PHÚC LỢI", "SideLabel", 12)
+	alb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	avb.add_child(alb)
+	_gift_badge = _badge(act_btn, Vector2(56, -4))
+
+	# Ánh xạ toàn bộ nút cũ vào nút Phúc Lợi để đảm bảo tương thích hướng dẫn & dev tools
+	for k in ["cards", "cooking", "fortune", "wheel_hud", "chest_hud", "pet_hud", "critic_hud", "storm_hud", "events", "wheel"]:
+		_named[k] = act_btn
+
+	# Thẻ món đặc biệt thu nhỏ bên dưới nút Phúc Lợi
 	var dish_card := UIKit.panel("Card")
-	dish_card.position = Vector2(12, 6)
-	dish_card.size = Vector2(148, 56)
-	dish_card.custom_minimum_size = Vector2(148, 56)
+	dish_card.position = Vector2(14, 96)
+	dish_card.size = Vector2(144, 50)
+	dish_card.custom_minimum_size = Vector2(144, 50)
 	add_child(dish_card)
 	var dch := UIKit.hbox(6)
 	dch.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dch.alignment = BoxContainer.ALIGNMENT_CENTER
 	dish_card.add_child(dch)
-	dch.add_child(UIKit.icon("icon_plate", 36))
+	dch.add_child(UIKit.icon("icon_plate", 30))
 	var dcv := UIKit.vbox(-6)
 	dcv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dch.add_child(dcv)
-	_dish_count = UIKit.label("0 MÓN", "SideLabel", 14)
+	_dish_count = UIKit.label("0 MÓN", "SideLabel", 13)
 	dcv.add_child(_dish_count)
-	_special_label = UIKit.label("", "SmallLabel", 12)
+	_special_label = UIKit.label("", "SmallLabel", 11)
 	_special_label.clip_text = true
 	_special_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	dcv.add_child(_special_label)
 	var dish_click := UIKit.button("", "IconButton", "")
 	dish_click.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dish_click.pressed.connect(_go_tab.bind(2))
+	dish_click.pressed.connect(_go_tab.bind(1))
 	dish_card.add_child(dish_click)
+	_named["menu"] = dish_click
 
-	var cards := _icon_button("icon_cards", 52, Vector2(14, 70))
-	cards.pressed.connect(_open_popup.bind("open_collection"))
-	_named["cards"] = cards
+	# --- Cột phải: NÚT QUẢN LÝ (Mục tiêu chương, đơn tiệc, nghiên cứu)
+	var manage_btn := JuicyButton.new()
+	manage_btn.theme_type_variation = "SideCard"
+	manage_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	manage_btn.offset_left = -94
+	manage_btn.offset_right = -12
+	manage_btn.offset_top = 8
+	manage_btn.offset_bottom = 90
+	manage_btn.custom_minimum_size = Vector2(82, 82)
+	manage_btn.pressed.connect(_open_goals)
+	add_child(manage_btn)
+	var mvb := UIKit.vbox(2)
+	mvb.set_anchors_preset(Control.PRESET_FULL_RECT)
+	mvb.alignment = BoxContainer.ALIGNMENT_CENTER
+	mvb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	manage_btn.add_child(mvb)
+	var mic := TextureRect.new()
+	mic.texture = Sprites.ui("icon_book")
+	mic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	mic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	mic.custom_minimum_size = Vector2(38, 38)
+	mvb.add_child(mic)
+	var mlb := UIKit.label("QUẢN LÝ", "SideLabel", 12)
+	mlb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	mvb.add_child(mlb)
+	_goal_badge = _badge(manage_btn, Vector2(56, -4))
+	_named["goals"] = manage_btn
+	_named["orders"] = manage_btn
+	_named["research"] = manage_btn
 
-	var cook_btn := _icon_button("icon_plate", 52, Vector2(14, 130))
-	cook_btn.pressed.connect(_open_popup.bind("open_cooking"))
-	_named["cooking"] = cook_btn
-
-	var fortune_btn := _icon_button("gift", 52, Vector2(14, 190))
-	fortune_btn.pressed.connect(_open_popup.bind("open_fortune"))
-	_named["fortune"] = fortune_btn
-
-	var wheel_btn := _icon_button("icon_wheel", 52, Vector2(14, 250))
-	wheel_btn.pressed.connect(_open_popup.bind("open_wheel"))
-	_named["wheel_hud"] = wheel_btn
-
-	var chest_btn := _icon_button("chest_gold", 52, Vector2(14, 310))
-	chest_btn.pressed.connect(_open_popup.bind("open_mystery_chest"))
-	_named["chest_hud"] = chest_btn
-
-	var pet_btn := _icon_button("icon_staff", 52, Vector2(14, 370))
-	pet_btn.pressed.connect(_open_popup.bind("open_pet"))
-	_named["pet_hud"] = pet_btn
-
-	var critic_btn := _icon_button("icon_trophy", 52, Vector2(14, 430))
-	critic_btn.pressed.connect(_open_popup.bind("open_food_critic"))
-	_named["critic_hud"] = critic_btn
-
-	var storm_btn := _icon_button("gift", 52, Vector2(14, 490))
-	storm_btn.pressed.connect(_open_popup.bind("open_fortune_storm"))
-	_named["storm_hud"] = storm_btn
-
-	# --- cột 5 thẻ nổi bên phải theo Concept A
-	var side_col := UIKit.vbox(8)
-	side_col.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	side_col.offset_left = -106
-	side_col.offset_right = -12
-	side_col.offset_top = 10
-	side_col.offset_bottom = 470
-	add_child(side_col)
-
-	# 1. QUẢN LÝ (mở mục tiêu, đơn tiệc, nghiên cứu)
-	var btn_manage := _side_card(side_col, "gear", "QUẢN LÝ")
-	btn_manage.pressed.connect(_open_goals)
-	_goal_badge = _badge(btn_manage, Vector2(66, -4))
-	_named["goals"] = btn_manage
-	_named["orders"] = btn_manage
-	_named["research"] = btn_manage
-
-	# 2. THỰC ĐƠN (mở tab Thực đơn)
-	var btn_menu := _side_card(side_col, "icon_book", "THỰC ĐƠN")
-	btn_menu.pressed.connect(_go_tab.bind(2))
-	_dish_badge = _badge(btn_menu, Vector2(66, -4))
-	_named["menu"] = btn_menu
-
-	# 3. NÂNG CẤP (mở tab Mở rộng / Nâng cấp quán)
-	var btn_upgrade := _side_card(side_col, "icon_upgrade", "NÂNG CẤP")
-	btn_upgrade.pressed.connect(_go_tab.bind(3))
-	_house_badge = _badge(btn_upgrade, Vector2(66, -4))
-	_named["upgrade"] = btn_upgrade
-
-	# 4. SỰ KIỆN (mở sự kiện / vòng quay)
-	var btn_event := _side_card(side_col, "gift", "SỰ KIỆN")
-	btn_event.pressed.connect(_open_event_or_wheel)
-	_gift_badge = _badge(btn_event, Vector2(66, -4))
-	_named["events"] = btn_event
-	_named["wheel"] = btn_event
-
-	# 5. CỬA HÀNG (mở Shop & mua Buff x2)
-	var btn_shop := _side_card(side_col, "icon_shop_roof", "CỬA HÀNG")
-	btn_shop.pressed.connect(_open_shop)
-	_bolt_badge = _badge(btn_shop, Vector2(66, -4))
-	_named["shop"] = btn_shop
-	_boost_label = UIKit.label("", "SideLabel", 12)
-	_boost_label.add_theme_color_override("font_color", Color("e04f38"))
-	_boost_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_boost_label.offset_top = -18
-	_boost_label.offset_bottom = 2
+	# Nút Cửa Hàng / Buff x2 nhỏ gọn bên dưới Quản Lý
+	var shop_btn := JuicyButton.new()
+	shop_btn.theme_type_variation = "SideCard"
+	shop_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	shop_btn.offset_left = -94
+	shop_btn.offset_right = -12
+	shop_btn.offset_top = 96
+	shop_btn.offset_bottom = 168
+	shop_btn.custom_minimum_size = Vector2(82, 72)
+	shop_btn.pressed.connect(_open_shop)
+	add_child(shop_btn)
+	var svb := UIKit.vbox(1)
+	svb.set_anchors_preset(Control.PRESET_FULL_RECT)
+	svb.alignment = BoxContainer.ALIGNMENT_CENTER
+	svb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shop_btn.add_child(svb)
+	var sic := TextureRect.new()
+	sic.texture = Sprites.ui("icon_shop_roof")
+	sic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	sic.custom_minimum_size = Vector2(34, 34)
+	svb.add_child(sic)
+	var slb := UIKit.label("CỬA HÀNG", "SideLabel", 11)
+	slb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	svb.add_child(slb)
+	_boost_label = UIKit.label("", "SideLabel", 11)
+	_boost_label.add_theme_color_override("font_color", Color("c0392b"))
 	_boost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	btn_shop.add_child(_boost_label)
+	svb.add_child(_boost_label)
+	_bolt_badge = _badge(shop_btn, Vector2(56, -4))
+	_named["shop"] = shop_btn
 
 	# --- thông báo sự kiện
 	_event_box = UIKit.panel("Highlight")
@@ -241,19 +258,19 @@ func _build() -> void:
 	_ch_bar.show_percentage = false
 	chv.add_child(_ch_bar)
 
-	# --- gợi ý dưới đáy
-	# nút gợi ý việc nên làm tiếp theo
-	_hint = UIKit.button("", "", "hand", 0)
-	_hint.add_theme_font_size_override("font_size", 21)
-	_hint.add_theme_constant_override("icon_max_width", 34)
+	# --- Gợi ý việc nên làm tiếp theo (chỉ hiện khi có việc cần làm)
+	_hint = UIKit.button("", "Highlight", "hand", 0)
+	_hint.add_theme_font_size_override("font_size", 18)
+	_hint.add_theme_constant_override("icon_max_width", 28)
 	_hint.clip_text = true
 	_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	_hint.offset_left = -300
-	_hint.offset_right = 300
-	_hint.offset_top = -78
-	_hint.offset_bottom = -12
+	_hint.offset_left = -260
+	_hint.offset_right = 160
+	_hint.offset_top = -68
+	_hint.offset_bottom = -14
 	_hint.pressed.connect(_on_hint)
+	_hint.visible = false
 	add_child(_hint)
 
 
@@ -336,8 +353,12 @@ func _process(delta: float) -> void:
 	var active := g.boost_active()
 	_boost_label.text = NumberFormat.fmt_clock(g.boost_left()) if active else ""
 	var rate: float = g.measured_rate if g.measured_rate > 0.0 else g.estimate_rate()
-	_rate_label.text = "+%s vàng/giây • %s%s" % [NumberFormat.fmt_dec(rate), g.day_name(),
-		" (khách +25%)" if g.is_evening() else ""]
+	var status_text := ""
+	if not g.feature_status().is_empty():
+		status_text = " • " + g.feature_status()
+	elif g.is_evening():
+		status_text = " • Tối (khách +25%)"
+	_rate_label.text = "+%s/s • %s%s" % [NumberFormat.fmt_dec(rate), g.day_name(), status_text]
 	var ch := Story.challenge
 	_ch_box.visible = not ch.is_empty()
 	if _ch_box.visible:
@@ -383,15 +404,17 @@ func _refresh() -> void:
 	if _goal_badge:
 		_goal_badge.visible = Progress.star_claimable() or g.can_advance_chapter() or g.orders_ready_count() > 0 or can_learn
 	var sp: Dictionary = g.dish_info(g.daily_special())
-	_special_label.text = "⭐ %s x2" % str(sp.get("name", "Phở"))
+	_special_label.text = "%s x2" % str(sp.get("name", "Phở"))
 
 
 ## Gợi ý việc nên làm tiếp theo (ưu tiên phần thưởng, rồi mục tiêu chương, rồi nâng cấp rẻ nhất).
 func _update_hint() -> void:
 	var s := _suggest()
-	_hint.text = str(s["text"])
-	_hint_action = s["action"]
+	var txt: String = str(s.get("text", ""))
+	_hint.text = txt
+	_hint_action = s.get("action", Callable())
 	_hint.pulse = _hint_action.is_valid()
+	_hint.visible = not txt.is_empty()
 
 
 func _suggest() -> Dictionary:
@@ -532,3 +555,9 @@ func _open_orders() -> void:
 func _open_shop() -> void:
 	if UIKit.main:
 		UIKit.main.call("open_shop")
+
+
+func _open_activity_hub() -> void:
+	if UIKit.main:
+		var p: PopupBase = ActivityHubScript.new()
+		UIKit.main.call("open_popup", p)

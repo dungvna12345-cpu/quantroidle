@@ -20,7 +20,7 @@ var _floaters: Array[Dictionary] = []
 var _spawn_timer: float = 0.0
 
 func _init() -> void:
-	title_text = "Mưa Lì Xì Thần Tài 🧧"
+	title_text = "Mưa Lì Xì Thần Tài"
 	panel_width = 680.0
 	closable = false # Chỉ đóng khi hết giờ hoặc bấm hoàn tất
 
@@ -37,11 +37,11 @@ func _build(b: VBoxContainer) -> void:
 	stat_h.alignment = BoxContainer.ALIGNMENT_CENTER
 	stat_box.add_child(stat_h)
 
-	_time_label = UIKit.label("⏳ Thời gian: 10.0s", "HeaderLabel", 22)
+	_time_label = UIKit.label("Thời gian: 10.0s", "HeaderLabel", 22)
 	_time_label.add_theme_color_override("font_color", Color("ef4444"))
 	stat_h.add_child(_time_label)
 
-	_stats_label = UIKit.label("🧧 Bắt được: 0 | 🪙 0 | 💎 0", "HeaderLabel", 20)
+	_stats_label = UIKit.label("Bắt được: 0  •  Vàng 0  •  KC 0", "HeaderLabel", 20)
 	_stats_label.add_theme_color_override("font_color", Color("d97706"))
 	stat_h.add_child(_stats_label)
 
@@ -54,7 +54,7 @@ func _build(b: VBoxContainer) -> void:
 	b.add_child(_canvas)
 
 	# Nút hoàn tất (ẩn ban đầu)
-	_finish_btn = UIKit.button("Thu Hoạch Tài Lộc ✨", "GreenButton", "", 320)
+	_finish_btn = UIKit.button("Thu Hoạch Tài Lộc", "GreenButton", "", 320)
 	_finish_btn.visible = false
 	_finish_btn.pressed.connect(close)
 	b.add_child(_finish_btn)
@@ -91,13 +91,13 @@ func _check_click(pos: Vector2) -> void:
 			var d_val: int = int(env["val"])
 			_total_diamonds += d_val
 			GameState.add_diamonds(d_val)
-			_add_floater(pos, "+%d 💎" % d_val, Color("38bdf8"))
+			_add_floater(pos, "+%d KC" % d_val, Color("38bdf8"))
 			AudioManager.play("levelup", 0.1)
 		else:
 			var g_val: float = float(env["val"])
 			_total_gold += g_val
 			GameState.add_gold(g_val)
-			_add_floater(pos, "+%s 🪙" % NumberFormat.fmt(g_val), Color("facc15"))
+			_add_floater(pos, "+%s vàng" % NumberFormat.fmt(g_val), Color("facc15"))
 			AudioManager.play_pitch("coin", randf_range(1.1, 1.4))
 
 		AudioManager.vibrate(15)
@@ -176,15 +176,15 @@ func _on_game_over() -> void:
 	AudioManager.play("celebrate")
 	AudioManager.vibrate(60)
 	_finish_btn.visible = true
-	GameState.show_toast("🧧 Thần Tài Ban Lộc: Bạn đã bắt được %d bao lì xì!" % _collected_count)
+	GameState.show_toast("Thần Tài Ban Lộc: Bạn đã bắt được %d bao lì xì!" % _collected_count, "gift")
 	if UIKit.main:
 		UIKit.main.call("burst_sparkles", panel.get_global_rect().get_center(), 24)
 
 func _update_labels() -> void:
 	if _time_label:
-		_time_label.text = "⏳ Thời gian: %.1fs" % _time_left
+		_time_label.text = "Thời gian: %.1fs" % _time_left
 	if _stats_label:
-		_stats_label.text = "🧧 Đã bắt: %d | 🪙 %s | 💎 %d" % [
+		_stats_label.text = "Đã bắt: %d  •  Vàng %s  •  KC %d" % [
 			_collected_count,
 			NumberFormat.fmt(_total_gold),
 			_total_diamonds

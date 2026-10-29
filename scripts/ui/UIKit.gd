@@ -2,6 +2,8 @@ class_name UIKit
 extends RefCounted
 ## Hàm dựng giao diện dùng chung để các tab, popup có cùng phong cách.
 
+const ChapterThemeScript := preload("res://scripts/ui/ChapterTheme.gd")
+
 static var main: Node = null   # tham chiếu Main (mở popup, hiệu ứng)
 
 
@@ -121,7 +123,7 @@ static func tab_sheet(parent: Control, title: String, subtitle: String = "") -> 
 
 static func section(text: String) -> Label:
 	var l := label(text, "", 28)
-	l.add_theme_color_override("font_color", ChapterTheme.accent())
+	l.add_theme_color_override("font_color", ChapterThemeScript.accent())
 	return l
 
 

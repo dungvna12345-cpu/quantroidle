@@ -19,7 +19,7 @@ func _build(b: VBoxContainer) -> void:
 	_count = centered_label("", "HeaderLabel", 26)
 	b.add_child(_count)
 
-	var btn_gb := UIKit.button("📖 XEM SỔ TAY THỰC KHÁCH", "RedButton", "", 360)
+	var btn_gb := UIKit.button("XEM SỔ TAY THỰC KHÁCH", "RedButton", "", 360)
 	btn_gb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	btn_gb.pressed.connect(func():
 		close()

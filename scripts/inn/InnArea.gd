@@ -812,7 +812,7 @@ func _spawn_merchant() -> void:
 			merchant.queue_free()
 			merchant = null
 	)
-	GameState.show_toast("🎁 THƯƠNG BUÔN PHƯƠNG XA GHÉ QUÁN! Chạm để mở rương báu!")
+	GameState.show_toast("THƯƠNG BUÔN PHƯƠNG XA GHÉ QUÁN! Chạm để mở rương báu!", "gift")
 	AudioManager.play("levelup")
 
 
@@ -837,9 +837,9 @@ func _spawn_thief() -> void:
 	thief.setup(self, Vector2(sx, sy), Vector2(tx, ty))
 	thief.caught.connect(func(_t): thief = null)
 	thief.escaped.connect(func(_t): thief = null)
-	GameState.show_toast("🚨 CẢNH BÁO: CHUỘT NHẮT TRỘM VÀNG! ĐẬP NHANH! 🚨")
+	GameState.show_toast("CẢNH BÁO: CHUỘT NHẮT TRỘM VÀNG! ĐẬP NHANH!", "gold_bag")
 	if pet != null and is_instance_valid(pet) and GameState.pet_level >= 4:
-		pet.say("Có trộm kìa sen ơi! Bắt lẹ! 🐾")
+		pet.say("Có trộm kìa sen ơi! Bắt lẹ!")
 		pet.show_bubble("face_angry")
 
 
@@ -873,7 +873,7 @@ func _spawn_fortune_god() -> void:
 			fortune_god.queue_free()
 			fortune_god = null
 	)
-	GameState.show_toast("🧧 THẦN TÀI GIÁ ĐÁO! Chạm vào Thần Tài để nhận Mưa Lì Xì!")
+	GameState.show_toast("THẦN TÀI GIÁ ĐÁO! Chạm vào Thần Tài để nhận Mưa Lì Xì!", "gift")
 	AudioManager.play("legendary")
 
 
@@ -899,7 +899,7 @@ func _spawn_critic() -> void:
 		queue.append(c)
 		c.set_state(Customer.S.ROAD)
 		_relayout_queue()
-		GameState.show_toast("⭐ NHÀ PHÊ BÌNH ẨM THỰC ĐÃ BÍ MẬT GHÉ QUÁN!")
+		GameState.show_toast("NHÀ PHÊ BÌNH ẨM THỰC ĐÃ BÍ MẬT GHÉ QUÁN!", "star")
 		AudioManager.play("levelup")
 
 
@@ -1151,9 +1151,9 @@ func customer_finished_eating(c: Customer) -> void:
 		tables[c.table].add_tip(_bill(c) * ratio)
 	if c.ctype == "wealth":
 		GameState.add_diamonds(1)
-		GameState.show_toast("Thần Tài gửi lại 1 Kim Cương lộc! 💎")
+		GameState.show_toast("Thần Tài gửi lại 1 Kim Cương lộc!", "diamond")
 	elif c.ctype == "critic":
-		GameState.show_toast("Nhà Phê Bình Bác Sáu đánh giá 5 SAO! ⭐⭐⭐⭐⭐")
+		GameState.show_toast("Nhà Phê Bình Bác Sáu đánh giá 5 SAO!", "star")
 		if UIKit.main and area_id == GameState.current_area:
 			UIKit.main.call_deferred("open_food_critic")
 	c.set_state(Customer.S.WAIT_PAY)
@@ -1440,9 +1440,9 @@ func _feed_koi(p: Vector2) -> void:
 	GameState.register_combo(to_global(p + Vector2(0, -30)))
 	if randf() < 0.25:
 		GameState.add_diamonds(1)
-		GameState.show_toast("🐟 Đàn cá Koi quẫy đuôi tặng bạn 1 Kim Cương!")
+		GameState.show_toast("Đàn cá Koi quẫy đuôi tặng bạn 1 Kim Cương!", "diamond")
 	else:
-		GameState.show_toast("🐟 Bạn đã cho cá Koi ăn: Đàn cá vui vẻ nhả tiền vàng!")
+		GameState.show_toast("Bạn đã cho cá Koi ăn: Đàn cá vui vẻ nhả tiền vàng!", "coin")
 
 
 ## Vùng camera được phép di chuyển (toạ độ cục bộ).

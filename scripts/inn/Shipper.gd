@@ -1,4 +1,3 @@
-class_name Shipper
 extends Walker
 ## Shipper giao đồ ăn (cơ chế chương Sài Gòn): chạy tới cổng, chờ một lúc rồi đi.
 ## Người chơi chạm vào khi shipper đang chờ để giao đơn và nhận tiền ngay.
@@ -16,7 +15,7 @@ func _ready() -> void:
 	set_sprite("cust_3")
 	body.modulate = Color(0.75, 1.0, 0.85)
 	var tag := Label.new()
-	tag.text = "🛵 SHIPPER"
+	tag.text = "SHIPPER"
 	tag.theme_type_variation = "WhiteLabel"
 	tag.add_theme_font_size_override("font_size", 18)
 	tag.add_theme_color_override("font_color", Color("7cf2c4"))

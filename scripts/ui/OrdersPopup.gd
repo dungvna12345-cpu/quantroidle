@@ -1,6 +1,8 @@
 extends PopupBase
 ## Đơn đặt tiệc: phục vụ đủ số phần một món để nhận thưởng vàng + kim cương. Có thể đổi đơn bằng kim cương.
 
+const ChapterThemeScript := preload("res://scripts/ui/ChapterTheme.gd")
+
 var _rows: Array[Dictionary] = []
 
 
@@ -66,9 +68,9 @@ func _refresh() -> void:
 		(r["icon"] as TextureRect).texture = Sprites.tex("dish_" + str(o["dish"]))
 		var royal := g.order_is_royal(i)
 		var title: Label = r["title"]
-		title.text = ("👑 " if royal else "") + "%s: %d phần %s" % [str(o["theme"]), int(o["need"]), str(d["name"])]
+		title.text = ("NGỰ YẾN • " if royal else "") + "%s: %d phần %s" % [str(o["theme"]), int(o["need"]), str(d["name"])]
 		if royal:
-			title.add_theme_color_override("font_color", ChapterTheme.accent())
+			title.add_theme_color_override("font_color", ChapterThemeScript.accent())
 			(r["sub"] as Label).text = "Thưởng: %s vàng + %d kim cương hoàng gia" % [
 				NumberFormat.fmt(g.order_reward_for(i)), int(g.chapter_feature().get("bonus_diamonds", 5))]
 		else:

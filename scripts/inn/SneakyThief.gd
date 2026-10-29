@@ -61,7 +61,7 @@ func hit() -> bool:
 		UIKit.main.call("sparkle_at_world", global_position + Vector2(0, -30))
 
 	if hp > 0:
-		var squeaks := ["Chít chít! Bị lộ rồi!", "Đừng đuổi theo tôi!", "Bao vàng của tôiii! 😱", "Chạy đằng trời!"]
+		var squeaks := ["Chít chít! Bị lộ rồi!", "Đừng đuổi theo tôi!", "Bao vàng của tôiii!", "Chạy đằng trời!"]
 		say(squeaks[randi() % squeaks.size()])
 		show_bubble("face_angry")
 	else:
@@ -73,13 +73,13 @@ func _defeat() -> void:
 	_defeated = true
 	moving = false
 	show_bubble("face_heart")
-	say("Đầu hàng! Trả lại vàng nè! 😭")
+	say("Đầu hàng! Trả lại vàng nè!")
 	AudioManager.play("levelup", 0.1)
 
 	var bonus_gold := maxf(388.0, GameState.income_rate() * 45.0)
 	GameState.add_gold(bonus_gold)
 	GameState.add_diamonds(2)
-	GameState.show_toast("ĐÃ BẮT ĐƯỢC CHUỘT NHẮT! +%s Vàng & +2 💎!" % NumberFormat.fmt(bonus_gold))
+	GameState.show_toast("ĐÃ BẮT ĐƯỢC CHUỘT NHẮT! +%s Vàng & +2 Kim Cương!" % NumberFormat.fmt(bonus_gold), "gold_bag")
 
 	if UIKit.main:
 		for i in 8:
@@ -94,7 +94,7 @@ func _defeat() -> void:
 
 func _escape() -> void:
 	_defeated = true
-	GameState.show_toast("Chuột nhắt đã lẻn vào bóng tối tẩu thoát! 🐭💨")
+	GameState.show_toast("Chuột nhắt đã lẻn vào bóng tối tẩu thoát!", "gold_bag")
 	var et := create_tween()
 	et.tween_property(self, "modulate:a", 0.0, 0.3)
 	et.tween_callback(queue_free)

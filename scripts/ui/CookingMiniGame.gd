@@ -98,12 +98,12 @@ func _build(b: VBoxContainer) -> void:
 	b.add_child(leg)
 	leg.add_child(_legend_item(Color("eab308"), "Ngon (+1x)"))
 	leg.add_child(_legend_item(Color("22c55e"), "Tuyệt Hảo (+3x)"))
-	leg.add_child(_legend_item(Color("fef08a"), "Thần Bếp (+6x & 💎)"))
+	leg.add_child(_legend_item(Color("fef08a"), "Thần Bếp (+6x & Kim Cương)"))
 
 	_result_label = centered_label("", "HeaderLabel", 26)
 	b.add_child(_result_label)
 
-	_action_btn = UIKit.button("🍳 XÀO CHẢO NGAY!", "RedButton", "", 320)
+	_action_btn = UIKit.button("XÀO CHẢO NGAY!", "RedButton", "", 320)
 	_action_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_action_btn.pressed.connect(_on_cook_press)
 	b.add_child(_action_btn)
@@ -143,17 +143,17 @@ func _on_cook_press() -> void:
 		# THẦN BẾP (PERFECT)!
 		AudioManager.play("levelup", 0.15)
 		AudioManager.play("bell", 0.1)
-		_result_label.text = "🔥 THẦN BẾP XUẤT THẾ! MÓN ĂN HOÀNG KIM! ⭐⭐⭐"
+		_result_label.text = "THẦN BẾP XUẤT THẾ! MÓN ĂN HOÀNG KIM!"
 		_result_label.modulate = Color("facc15")
 		var gold := maxf(888.0, GameState.income_rate() * 60.0)
 		GameState.add_gold(gold)
 		GameState.add_diamonds(1)
 		GameState.start_fever(20.0)
-		GameState.show_toast("THẦN BẾP HOÀN HẢO! +%s Vàng & +1 💎!" % NumberFormat.fmt(gold))
+		GameState.show_toast("THẦN BẾP HOÀN HẢO! +%s Vàng & +1 Kim Cương!" % NumberFormat.fmt(gold), "diamond")
 	elif dist <= 0.09:
 		# TUYỆT HẢO
 		AudioManager.play("bell", 0.1)
-		_result_label.text = "✨ MÓN ĂN TUYỆT HẢO! KHÁCH KHEN NỨC NỞ! ⭐⭐"
+		_result_label.text = "MÓN ĂN TUYỆT HẢO! KHÁCH KHEN NỨC NỞ!"
 		_result_label.modulate = Color("22c55e")
 		var gold := maxf(388.0, GameState.income_rate() * 25.0)
 		GameState.add_gold(gold)
@@ -161,7 +161,7 @@ func _on_cook_press() -> void:
 		GameState.show_toast("MÓN TUYỆT HẢO! +%s Vàng!" % NumberFormat.fmt(gold))
 	else:
 		# BÌNH THƯỜNG
-		_result_label.text = "🍲 Món Ăn Thơm Ngon, Vừa Vị!"
+		_result_label.text = "Món Ăn Thơm Ngon, Vừa Vị!"
 		_result_label.modulate = Color("e07a3f")
 		var gold := maxf(120.0, GameState.income_rate() * 10.0)
 		GameState.add_gold(gold)
@@ -171,4 +171,4 @@ func _on_cook_press() -> void:
 		for i in 6:
 			UIKit.main.call("sparkle_at", _action_btn.global_position + Vector2(randf_range(-100, 100), randf_range(-40, 20)))
 
-	_action_btn.text = "NHẬN THƯỞNG ✨"
+	_action_btn.text = "NHẬN THƯỞNG"

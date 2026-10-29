@@ -1,4 +1,3 @@
-class_name ChapterTheme
 extends RefCounted
 ## Bảng màu giao diện theo chương (data/chapters.json -> "ui"): tiêu đề popup, khung nổi bật,
 ## banner trạng thái, chữ tiêu đề mục. Sửa trực tiếp theme của project nên mọi control cập nhật ngay.

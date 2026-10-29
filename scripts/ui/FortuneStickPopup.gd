@@ -3,7 +3,7 @@ extends PopupBase
 ## Xin Xăm Quán Trọ / Rút Quẻ Cầu May:
 ## Lắc ống tre xin quẻ cát tường nhận phúc lộc vàng và kim cương!
 
-var _cylinder_icon: Label
+var _cylinder_icon: TextureRect
 var _draw_btn: JuicyButton
 var _card_panel: PanelContainer
 var _result_title: Label
@@ -14,7 +14,7 @@ var _drawn: bool = false
 
 const FORTUNES := [
 	{
-		"title": "🏮 QUẺ ĐẠI CÁT: KIM NGÂN ĐẦY NHÀ",
+		"title": "QUẺ ĐẠI CÁT: KIM NGÂN ĐẦY NHÀ",
 		"desc": "Hôm nay quán trọ tài lộc hanh thông, buôn may bán đắt, vàng ròng chảy vào như nước!",
 		"gold_mult": 40.0,
 		"diamonds": 2,
@@ -22,7 +22,7 @@ const FORTUNES := [
 		"color": "facc15"
 	},
 	{
-		"title": "✨ QUẺ THƯỢNG CÁT: KHÁCH QUÝ ĐẬM TÌNH",
+		"title": "QUẺ THƯỢNG CÁT: KHÁCH QUÝ ĐẬM TÌNH",
 		"desc": "Khách thập phương tấp nập tìm đến, tiếng lành đồn xa khắp ba miền đất nước!",
 		"gold_mult": 25.0,
 		"diamonds": 3,
@@ -30,7 +30,7 @@ const FORTUNES := [
 		"color": "fb923c"
 	},
 	{
-		"title": "🍲 QUẺ TRUNG CÁT: BẾP LỬA HỒNG HÀO",
+		"title": "QUẺ TRUNG CÁT: BẾP LỬA HỒNG HÀO",
 		"desc": "Hương thơm nức nở, nồi niêu reo vui, đầu bếp trổ tài chiêu đãi thực khách!",
 		"gold_mult": 20.0,
 		"diamonds": 1,
@@ -38,7 +38,7 @@ const FORTUNES := [
 		"color": "38bdf8"
 	},
 	{
-		"title": "🎋 QUẺ AN KHANG: PHƯỚC LỘC TOÀN GIA",
+		"title": "QUẺ AN KHANG: PHƯỚC LỘC TOÀN GIA",
 		"desc": "Quán trọ ấm êm, nhân viên đồng lòng, khách trọ mến thương lưu luyến không rời.",
 		"gold_mult": 15.0,
 		"diamonds": 2,
@@ -62,12 +62,8 @@ func _build(b: VBoxContainer) -> void:
 	cbox.custom_minimum_size = Vector2(0, 130)
 	b.add_child(cbox)
 
-	_cylinder_icon = Label.new()
-	_cylinder_icon.text = "🎋"
-	_cylinder_icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_cylinder_icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_cylinder_icon.add_theme_font_size_override("font_size", 90)
-	_cylinder_icon.pivot_offset = Vector2(45, 50)
+	_cylinder_icon = UIKit.icon("icon_event", 110)
+	_cylinder_icon.pivot_offset = Vector2(55, 100)
 	cbox.add_child(_cylinder_icon)
 
 	# Khung quẻ xăm hiển thị kết quả
@@ -92,7 +88,7 @@ func _build(b: VBoxContainer) -> void:
 	_reward_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cv.add_child(_reward_label)
 
-	_draw_btn = UIKit.button("🎋 LẮC ỐNG XĂM NGAY!", "RedButton", "", 320)
+	_draw_btn = UIKit.button("LẮC ỐNG XĂM NGAY!", "RedButton", "", 320)
 	_draw_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_draw_btn.pressed.connect(_on_draw_pressed)
 	b.add_child(_draw_btn)
@@ -135,7 +131,7 @@ func _reveal_fortune() -> void:
 	GameState.add_diamonds(dias)
 	GameState.start_fever(fever_dur)
 
-	_reward_label.text = "Phần Thưởng: +%s Vàng • +%d 💎 • Giờ Vàng %ds!" % [
+	_reward_label.text = "Phần Thưởng: +%s Vàng • +%d Kim Cương • Giờ Vàng %ds!" % [
 		NumberFormat.fmt(bonus_gold), dias, int(fever_dur)
 	]
 
@@ -145,7 +141,7 @@ func _reveal_fortune() -> void:
 	var fade := create_tween()
 	fade.tween_property(_card_panel, "modulate:a", 1.0, 0.25)
 
-	_draw_btn.text = "TẠ TƠN THẦN LINH ✨"
+	_draw_btn.text = "TẠ TƠN THẦN LINH"
 
 	if UIKit.main:
 		for i in 8:

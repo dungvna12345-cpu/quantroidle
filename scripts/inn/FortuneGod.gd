@@ -34,7 +34,7 @@ func interact() -> void:
 	AudioManager.play("levelup", 0.15)
 	AudioManager.vibrate(50)
 	show_bubble("face_heart")
-	say("ĐẠI CÁT ĐẠI LỢI! Thần Tài ban phước lành! 🧧✨")
+	say("ĐẠI CÁT ĐẠI LỢI! Thần Tài ban phước lành!")
 	
 	# Nhún nhảy chào phúc
 	var tw := create_tween()

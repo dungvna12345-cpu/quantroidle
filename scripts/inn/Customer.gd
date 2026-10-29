@@ -56,7 +56,7 @@ func _ready() -> void:
 		_glow.z_index = -1
 		add_child(_glow)
 		var tag := Label.new()
-		tag.text = "THẦN TÀI 💰"
+		tag.text = "THẦN TÀI"
 		tag.theme_type_variation = "WhiteLabel"
 		tag.add_theme_font_size_override("font_size", 18)
 		tag.add_theme_color_override("font_color", Color("ffd700"))
@@ -68,7 +68,7 @@ func _ready() -> void:
 		add_child(tag)
 	elif ctype == "critic":
 		var tag := Label.new()
-		tag.text = "PHÊ BÌNH VIÊN ⭐"
+		tag.text = "PHÊ BÌNH VIÊN"
 		tag.theme_type_variation = "WhiteLabel"
 		tag.add_theme_font_size_override("font_size", 18)
 		tag.add_theme_color_override("font_color", Color("ff8f7a"))
@@ -190,9 +190,9 @@ func rush() -> bool:
 	if ctype == "wealth":
 		var bonus: int = int(GameState.income_rate() * 8.0) + 88
 		GameState.add_gold(bonus)
-		say("Tấn tài tấn lộc! Quán trọ đại phát! 💰")
+		say("Tấn tài tấn lộc! Quán trọ đại phát!")
 	elif ctype == "critic":
-		say("Món ăn rất vừa vị, phong thái 5 sao! ⭐")
+		say("Món ăn rất vừa vị, phong thái 5 sao!")
 	else:
 		var cute_shouts := ["Ngon quá!", "Tuyệt cú mèo!", "Phục vụ 10 điểm!", "Thơm nức mũi!", "Tuyệt đỉnh!"]
 		if randf() < 0.45:
