@@ -1,0 +1,26 @@
+{
+	"pull_cost": 30,
+	"pull10_cost": 270,
+	"rarity_chance": {"common": 0.70, "rare": 0.25, "legend": 0.05},
+	"rarity_names": {"common": "Thường", "rare": "Hiếm", "legend": "Huyền thoại"},
+	"rarity_colors": {"common": "#7fb6e8", "rare": "#b98af0", "legend": "#ffb627"},
+	"level_copies": [1, 3, 6, 10, 15, 25],
+	"cards": [
+		{"id": "ba_ba_pho",    "name": "Bác Ba Phở",        "sprite": "chef",         "rarity": "common", "bonus": "income",  "value": 0.03},
+		{"id": "co_tu_xeo",    "name": "Cô Tư Bánh Xèo",    "sprite": "cust_4",       "rarity": "common", "bonus": "cook",    "value": 0.03},
+		{"id": "chi_hai_cuon", "name": "Chị Hai Gỏi Cuốn",  "sprite": "cust_2",       "rarity": "common", "bonus": "tip",     "value": 0.01},
+		{"id": "anh_nam_tra",  "name": "Anh Năm Trà Đá",    "sprite": "cust_3",       "rarity": "common", "bonus": "spawn",   "value": 0.03},
+		{"id": "ba_sau_che",   "name": "Bà Sáu Chè",        "sprite": "cust_6",       "rarity": "common", "bonus": "patience","value": 0.05},
+		{"id": "chu_bay_vit",  "name": "Chú Bảy Vịt Quay",  "sprite": "cust_1",       "rarity": "rare",   "bonus": "income",  "value": 0.06},
+		{"id": "co_ut_hue",    "name": "Cô Út Bún Bò Huế",  "sprite": "receptionist", "rarity": "rare",   "bonus": "cook",    "value": 0.06},
+		{"id": "ong_tam_lau",  "name": "Ông Tám Lẩu",       "sprite": "manager",      "rarity": "rare",   "bonus": "order",   "value": 0.10},
+		{"id": "be_mot_banh",  "name": "Bé Mốt Bánh Mì",    "sprite": "cust_5",       "rarity": "rare",   "bonus": "spawn",   "value": 0.06},
+		{"id": "ngu_thien",    "name": "Ngự Thiện Cung Đình","sprite": "cust_vip",    "rarity": "legend", "bonus": "income",  "value": 0.15},
+		{"id": "nghe_nhan",    "name": "Nghệ Nhân Ẩm Thực", "sprite": "chef",         "rarity": "legend", "bonus": "cook",    "value": 0.15},
+		{"id": "ba_chu_quan",  "name": "Bà Chủ Quán Trọ",   "sprite": "cashier",      "rarity": "legend", "bonus": "golden",  "value": 3.0}
+	],
+	"bonus_names": {
+		"income": "thu nhập", "cook": "tốc độ nấu", "tip": "cơ hội tiền boa", "spawn": "khách đến",
+		"patience": "kiên nhẫn của khách", "order": "thưởng đơn tiệc", "golden": "khách vàng"
+	}
+}

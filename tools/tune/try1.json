@@ -1,0 +1,19 @@
+{
+  "balance": {
+    "exp_base": 12,
+    "exp_growth": 1.40,
+    "base_spawn_interval": 3.8,
+    "min_spawn_interval": 1.0,
+    "walk_speed": 2.0,
+    "waiter_speed": 2.6,
+    "cost_growth": 1.17
+  },
+  "chapter_fields": {
+    "income_mult": [1, 3, 9, 27, 81]
+  },
+  "goal_n": {
+    "customers": [600, 1200, 2000, 3000, 6000],
+    "level": [10, 13, 16, 19, 24]
+  },
+  "wing_build_scale": 60
+}

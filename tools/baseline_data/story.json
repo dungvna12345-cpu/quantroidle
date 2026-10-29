@@ -1,0 +1,237 @@
+{
+	"characters": {
+		"ba":        {"name": "Bà Tư",              "portrait": "portrait_ba_tu",   "color": "#a8683d"},
+		"lan":       {"name": "Lan",                "portrait": "portrait_lan",     "color": "#e8414f"},
+		"phat":      {"name": "Giám đốc Phát",      "portrait": "portrait_phat",    "color": "#6b3fa0"},
+		"hung":      {"name": "Đầu bếp Hưng",       "portrait": "portrait_chef",    "color": "#5a6b7a"},
+		"co_ut":     {"name": "Cô Út Hội An",       "portrait": "portrait_cust_4",  "color": "#e89b16"},
+		"anh_tu":    {"name": "Anh Tư Sài Gòn",     "portrait": "portrait_cust_1",  "color": "#c4483e"},
+		"co_sau":    {"name": "Cô Sáu Đà Lạt",      "portrait": "portrait_guest",   "color": "#3f8f6a"},
+		"ngu_thien": {"name": "Ông Ngự Thiện",      "portrait": "portrait_cust_vip","color": "#7b2fa8"},
+		"ong_ba":    {"name": "Ông Ba xe ôm",       "portrait": "portrait_cust_3",  "color": "#4f8a3a"},
+		"co_mai":    {"name": "Cô Mai",             "portrait": "portrait_cust_2",  "color": "#3a7fc4"},
+		"be_ti":     {"name": "Bé Tí",              "portrait": "portrait_cust_5",  "color": "#a56be0"},
+		"chi_hoa":   {"name": "Chị Hoa",            "portrait": "portrait_cust_6",  "color": "#ef7fb0"},
+		"me":        {"name": "",                   "portrait": "",                 "color": "#6b4128"}
+	},
+
+	"scenes": {
+		"intro": [
+			{"who": "ba",   "text": "Cháu về rồi đấy à! Quán Trọ này ông bà dựng từ năm mươi năm trước, bát phở đầu tiên bán ra từ chính cái bếp kia."},
+			{"who": "ba",   "text": "Bà già rồi, tay run không giữ nổi muôi nữa. Từ hôm nay, bà giao quán lại cho cháu."},
+			{"who": "lan",  "text": "Chị đừng lo! Em là Lan, bồi bàn ở đây từ hồi còn bé tí. Có em phụ thì quán sẽ đông vui lại như xưa!"},
+			{"who": "phat", "text": "Ồ hô hô! Quán cũ kỹ thế này mà vẫn mở cửa à? Tôi là Phát, giám đốc chuỗi Phát Fast Food."},
+			{"who": "phat", "text": "Mảnh đất này mà xây cửa hàng gà rán thì tuyệt cú mèo! Bán cho tôi đi, tôi trả giá cao."},
+			{"who": "ba",   "text": "Không bán! Quán này là cả đời của bà."},
+			{"who": "phat", "text": "Được thôi. Nhưng quán vắng khách thì sớm muộn cũng phải bán. Tôi sẽ quay lại, há há há!"},
+			{"who": "lan",  "text": "Hừ, cái ông này! Chị ơi, mình làm quán đông khách nhất phố cổ cho ông ấy biết tay!"}
+		],
+		"first_serve": [
+			{"who": "lan",  "text": "Đồng vàng đầu tiên! Vị khách vừa rồi khen trà đá nhà mình mát lắm!"},
+			{"who": "ba",   "text": "Khách vui thì quán mới sống. Cháu cứ chạm vào khách đang chờ để phục vụ nhanh hơn nhé."}
+		],
+		"lv3": [
+			{"who": "lan",  "text": "Chị ơi, mấy khách quen ngày xưa nghe tin quán mở lại đang kéo về đấy!"},
+			{"who": "lan",  "text": "Khách quen có bảng tên trên đầu. Phục vụ họ nhiều lần thì họ sẽ kể chuyện và tặng quà cho mình."}
+		],
+
+		"ch1_star1": [
+			{"who": "ba",   "text": "Quán bắt đầu đông rồi đấy. Ông nhà bà mà thấy chắc vui lắm."},
+			{"who": "ba",   "text": "Ngày xưa ông nấu nồi nước dùng phở thâu đêm, cả phố ngửi thấy mùi quế hồi."}
+		],
+		"ch1_challenge": [
+			{"who": "phat", "text": "Ố là la, quán cũng có khách cơ đấy. Nhưng chắc chỉ ăn may thôi!"},
+			{"who": "phat", "text": "Tôi thách cô: kiếm đủ số vàng tôi ra trong vòng 3 phút. Không làm được thì đừng mơ giữ quán!"},
+			{"who": "lan",  "text": "Chị ơi nhận lời đi! Mình chạm khách thật nhanh, nhặt hết tiền boa là được!"}
+		],
+		"ch1_win": [
+			{"who": "phat", "text": "Cái... cái gì? Sao mà nhiều tiền thế được!"},
+			{"who": "lan",  "text": "Thấy chưa! Quán của chị em mình đâu phải dạng vừa!"},
+			{"who": "phat", "text": "Hừm, mới thắng một ván thôi. Còn dài dài, cứ chờ đấy!"}
+		],
+		"ch1_lose": [
+			{"who": "phat", "text": "Há há há! Đã bảo rồi mà, quán nhỏ thì làm ăn cũng nhỏ thôi!"},
+			{"who": "ba",   "text": "Đừng nản cháu ạ. Nâng cấp món, thuê thêm người, lát nữa đấu lại."}
+		],
+		"ch1_star2": [
+			{"who": "hung", "text": "Chào chủ quán! Tôi là Hưng, đầu bếp. Nghe quán Bà Tư mở lại là tôi xin về làm ngay."},
+			{"who": "hung", "text": "Món nào được nâng cấp thì bán giá cao hơn. Món đặc sản phở của phố cổ còn được bán giá x1,5 đấy!"}
+		],
+		"ch1_end": [
+			{"who": "ba",   "text": "Giỏi lắm cháu! Giờ cả phố cổ ai cũng biết Quán Trọ của nhà mình."},
+			{"who": "phat", "text": "Hừ! Ở Hà Nội cô thắng, nhưng tôi có chuỗi cửa hàng khắp cả nước!"},
+			{"who": "ba",   "text": "Muốn thắng hắn, cháu phải học món ngon khắp ba miền. Vào Hội An tìm Cô Út, bạn cũ của bà, bà ấy làm bánh mì ngon nhất phố Hội."},
+			{"who": "lan",  "text": "Đi Hội An! Em xếp đồ ngay!"}
+		],
+
+		"ch2_start": [
+			{"who": "co_ut", "text": "Trời đất, cháu của chị Tư đây hả? Vào đây, vào đây! Hội An đêm nay lên đèn đẹp lắm."},
+			{"who": "co_ut", "text": "Cô cho cháu mượn căn nhà vàng bên sông Hoài. Bánh mì là đặc sản ở đây, nhớ chăm món đó nghen."},
+			{"who": "lan",   "text": "Ui, đèn lồng nhiều màu quá trời! Chị ơi, mình chụp hình đi!"}
+		],
+		"ch2_star1": [
+			{"who": "co_ut", "text": "Khách du lịch thích quán cháu lắm đó. Ai đeo máy ảnh là khách du lịch, họ trả gấp đôi!"}
+		],
+		"ch2_challenge": [
+			{"who": "phat",  "text": "Lại gặp nhau rồi! Chi nhánh Phát Fast Food Hội An vừa khai trương ngay đầu phố."},
+			{"who": "phat",  "text": "Lần này tôi thách khó hơn: 4 phút, kiếm đủ số vàng này. Thua thì dẹp tiệm về quê!"}
+		],
+		"ch2_win": [
+			{"who": "co_ut", "text": "Hay quá! Khách bỏ gà rán sang ăn bánh mì của cháu hết rồi kìa!"},
+			{"who": "phat",  "text": "Gà rán của tôi... không ai ăn... Tôi sẽ không bỏ cuộc đâu!"}
+		],
+		"ch2_lose": [
+			{"who": "phat",  "text": "Hô hô! Khách du lịch chọn gà rán rồi nhé!"},
+			{"who": "co_ut", "text": "Đừng buồn, cháu thử nâng bàn với món bánh mì rồi đấu lại nghen."}
+		],
+		"ch2_star2": [
+			{"who": "lan",   "text": "Chị ơi, em thấy giám đốc Phát lén đứng ngoài cửa ăn thử bánh mì nhà mình đó. Ổng ăn tới hai ổ luôn!"}
+		],
+		"ch2_end": [
+			{"who": "co_ut", "text": "Cô dạy cháu hết bí quyết rồi. Giờ vào Sài Gòn tìm thằng Tư, nó làm cơm tấm số một Sài thành."},
+			{"who": "co_ut", "text": "Nghe nói trụ sở Phát Fast Food cũng ở trỏng. Cẩn thận nghen con!"}
+		],
+
+		"ch3_start": [
+			{"who": "anh_tu", "text": "Chào em! Anh là Tư cơm tấm đây. Sài Gòn đông vui, khách tới lúc nào cũng có, miễn là phục vụ cho lẹ."},
+			{"who": "anh_tu", "text": "Cơm tấm sườn bì chả là đặc sản. Nướng cho thơm, khách đứng ngoài đường cũng phải ghé vô!"},
+			{"who": "lan",    "text": "Xe máy nhiều quá chị ơi! Mà khách ở đây ăn nhanh dữ ha!"}
+		],
+		"ch3_star1": [
+			{"who": "anh_tu", "text": "Em làm được đó! Mà để ý khách mặt đỏ nha, khó tính lắm, chờ lâu là bỏ về. Phục vụ họ kịp thì tiền boa đậm lắm."}
+		],
+		"ch3_challenge": [
+			{"who": "phat",   "text": "Chào mừng tới đại bản doanh của tôi! Ở Sài Gòn, tốc độ là tất cả."},
+			{"who": "phat",   "text": "Thử thách: phục vụ đủ số khách này trong 4 phút. Nhân viên của tôi làm được, còn quán cô thì sao?"}
+		],
+		"ch3_win": [
+			{"who": "anh_tu", "text": "Nhanh như chớp! Khách khen nức nở luôn em ơi!"},
+			{"who": "phat",   "text": "Không thể nào... Nhân viên của tôi được huấn luyện bài bản cơ mà!"}
+		],
+		"ch3_lose": [
+			{"who": "phat",   "text": "Chậm quá, chậm quá! Ở Sài Gòn chậm là thua!"},
+			{"who": "anh_tu", "text": "Thuê thêm bồi bàn, đầu bếp đi em, rồi mình làm lại."}
+		],
+		"ch3_star2": [
+			{"who": "phat",   "text": "Này... cho tôi hỏi nhỏ... cơm tấm của quán cô ướp sườn bằng gì mà thơm thế?"},
+			{"who": "lan",    "text": "Bí mật gia truyền! Muốn biết thì xếp hàng mua như mọi người nha!"}
+		],
+		"ch3_end": [
+			{"who": "anh_tu", "text": "Em giỏi hơn anh tưởng nhiều. Giờ lên Đà Lạt tìm Cô Sáu, cổ nấu lẩu ngon nhất xứ sương mù."},
+			{"who": "lan",    "text": "Đà Lạt lạnh lắm, em phải mang áo khoác!"}
+		],
+
+		"ch4_start": [
+			{"who": "co_sau", "text": "Lên tới rồi hả con? Ngồi gần lò sưởi cho ấm. Trời Đà Lạt chiều nào cũng có sương."},
+			{"who": "co_sau", "text": "Khách ở đây thích nồi lẩu nóng hổi. Lẩu là đặc sản, nấu kỹ thì bán được giá."}
+		],
+		"ch4_star1": [
+			{"who": "lan",    "text": "Chị ơi... tự nhiên em nhớ Bà Tư quá. Không biết ở nhà bà có khỏe không."},
+			{"who": "ba",     "text": "Bà khỏe lắm! Bà xem quán của hai đứa trên báo rồi đấy. Cả phố cổ khen. Cố lên nhé!"},
+			{"who": "lan",    "text": "Bà ơi! Hu hu, tụi con sẽ cố gắng!"}
+		],
+		"ch4_challenge": [
+			{"who": "phat",   "text": "Hắt xì! Đà Lạt lạnh quá... Nhưng tôi vẫn đến để thách đấu đây!"},
+			{"who": "phat",   "text": "Lễ hội hoa sắp diễn ra. Ai kiếm nhiều vàng hơn trong 4 phút sẽ được chọn làm quán chính thức!"}
+		],
+		"ch4_win": [
+			{"who": "co_sau", "text": "Quán con được chọn rồi! Cả lễ hội hoa sẽ ăn lẩu của mình!"},
+			{"who": "phat",   "text": "Hắt xì... Hừm, lẩu của cô... ấm thật đấy. Không phải tôi khen đâu nhé!"}
+		],
+		"ch4_lose": [
+			{"who": "phat",   "text": "Hắt xì! Thắng rồi! Ban tổ chức chọn gà rán! Hắt xì!"},
+			{"who": "co_sau", "text": "Không sao con, nâng món lẩu lên rồi mình xin đấu lại."}
+		],
+		"ch4_star2": [
+			{"who": "co_sau", "text": "Nghiên cứu là chìa khóa đó con. Sách nghiên cứu mở được bí quyết, giữ mãi về sau."}
+		],
+		"ch4_end": [
+			{"who": "co_sau", "text": "Con học đủ món ba miền rồi. Còn một nơi cuối: Cố đô Huế, nơi có ẩm thực cung đình."},
+			{"who": "phat",   "text": "Huế à? Tốt! Cuộc thi Ẩm thực Cố đô sắp diễn ra. Đó sẽ là trận cuối giữa chúng ta!"}
+		],
+
+		"ch5_start": [
+			{"who": "ngu_thien", "text": "Chào mừng đến Cố đô. Ta là người nấu ăn cho Ngự Thiện phòng, nay đã già, chỉ tìm người kế thừa."},
+			{"who": "ngu_thien", "text": "Món cung đình cần sự tinh tế. Bún bò Huế là đặc sản, cháu hãy làm cho thật đậm đà."},
+			{"who": "lan",       "text": "Cột son, bình phong vàng... đẹp như trong phim cổ trang vậy!"}
+		],
+		"ch5_star1": [
+			{"who": "ngu_thien", "text": "Khá lắm. Khách quan trong cung xưa cũng không kén chọn bằng khách bây giờ đâu, haha."}
+		],
+		"ch5_challenge": [
+			{"who": "phat",      "text": "Cuộc thi Ẩm thực Cố đô bắt đầu! Vòng sơ loại: kiếm nhiều vàng nhất trong 5 phút!"},
+			{"who": "phat",      "text": "Lần này tôi mang đầu bếp giỏi nhất chuỗi. Cô sẽ thua!"}
+		],
+		"ch5_win": [
+			{"who": "ngu_thien", "text": "Quán của cháu vào chung kết! Giám khảo khen vị nước dùng như hồi xưa trong cung."},
+			{"who": "phat",      "text": "Tôi... tôi chưa thua đâu! Còn vòng chung kết!"}
+		],
+		"ch5_lose": [
+			{"who": "phat",      "text": "Vòng sơ loại tôi dẫn trước! Chuẩn bị nhận thua đi!"},
+			{"who": "ngu_thien", "text": "Bình tĩnh. Đầu bếp giỏi không vội. Nâng cấp quán rồi đấu lại."}
+		],
+		"ch5_star2": [
+			{"who": "phat",      "text": "Chủ quán... tôi có chuyện muốn kể. Hồi nhỏ tôi cũng hay ăn phở ở quán Bà Tư."},
+			{"who": "phat",      "text": "Rồi nhà tôi chuyển đi, tôi lớn lên chỉ biết kiếm tiền. Chuỗi gà rán... thật ra chẳng ngon bằng bát phở ngày xưa."}
+		],
+		"finale": [
+			{"who": "ngu_thien", "text": "Kết quả chung kết: Quán Trọ của Bà Tư giành giải Nhất Ẩm thực Cố đô!"},
+			{"who": "phat",      "text": "Tôi thua rồi... Nhưng lần đầu tiên thua mà tôi thấy vui. Các món của cô làm tôi nhớ nhà."},
+			{"who": "phat",      "text": "Tôi sẽ không mua mảnh đất nào nữa. Từ nay... cho tôi làm khách quen của quán nhé?"},
+			{"who": "ba",        "text": "Cháu bà giỏi quá! Quán Trọ nhà mình giờ nổi tiếng khắp ba miền rồi."},
+			{"who": "lan",       "text": "Chị ơi, mình làm được rồi! Từ phố cổ tới Cố đô!"},
+			{"who": "ba",        "text": "Nhưng nghề quán thì không bao giờ kết thúc. Cháu cứ mở chuỗi quán mới, khách khắp nơi vẫn đang chờ đấy!"}
+		]
+	},
+
+	"chapter_scenes": {
+		"start": "ch%d_start",
+		"star1": "ch%d_star1",
+		"challenge": "ch%d_challenge",
+		"star2": "ch%d_star2",
+		"end": "ch%d_end"
+	},
+
+	"challenges": [
+		{"type": "earn",  "seconds": 180, "factor": 1.3, "min": 200},
+		{"type": "earn",  "seconds": 240, "factor": 1.4, "min": 1500},
+		{"type": "serve", "seconds": 240, "factor": 1.3, "min": 15},
+		{"type": "earn",  "seconds": 240, "factor": 1.5, "min": 50000},
+		{"type": "earn",  "seconds": 300, "factor": 1.5, "min": 500000}
+	],
+	"challenge_reward": {"gold_minutes": 10, "diamonds": 15, "rp": 2},
+	"challenge_retry_seconds": 120,
+
+	"regulars": [
+		{"id": "ong_ba",  "sprite": "cust_3", "dish": "tra_da",
+			"stories": [
+				"Ông chạy xe ôm ở phố này ba mươi năm rồi. Ngày nào cũng ghé làm cốc trà đá ở quán Bà Tư!",
+				"Hồi trẻ ông chở bà Tư đi chợ hoài. Bà kể ông nghe hết chuyện ông nhà bả nấu phở ngon cỡ nào.",
+				"Ông nói với cả đám xe ôm rồi: ai chở khách đói thì cứ chở thẳng về quán này!"]},
+		{"id": "co_mai",  "sprite": "cust_2", "dish": "banh_mi",
+			"stories": [
+				"Cô dạy văn ở trường gần đây. Giờ ra chơi học trò cứ đòi cô mua bánh mì quán em.",
+				"Cô cho học trò viết văn tả món ăn yêu thích. Cả lớp tả... quán của em đó!",
+				"Cô viết một bài báo nhỏ về quán em, mai đăng rồi. Chắc khách sẽ đông lắm!"]},
+		{"id": "be_ti",   "sprite": "cust_5", "dish": "che",
+			"stories": [
+				"Con là Tí! Con thích chè ba màu nhất trên đời! Hì hì!",
+				"Mẹ con nói ăn chè nhiều sâu răng. Nhưng chè quán chị ngon quá trời!",
+				"Lớn lên con sẽ làm đầu bếp giống chị! Chị dạy con nấu chè nha!"]},
+		{"id": "chi_hoa", "sprite": "cust_6", "dish": "com_tam",
+			"stories": [
+				"Chị bán hoa ở chợ đầu ngõ. Trưa nào cũng ghé ăn đĩa cơm tấm rồi mới bán tiếp.",
+				"Chị đem hoa tươi tặng quán nè, cắm lên bàn cho khách vui.",
+				"Chị đặt ở quán em một bữa tiệc cho cả nhà vào cuối tuần. Nhớ chừa bàn đẹp cho chị nhé!"]}
+	],
+	"regular_thresholds": [3, 8, 15],
+	"regular_rewards": [{"diamonds": 5}, {"rp": 1}, {"diamonds": 15, "cards": 1}],
+
+	"chatter": {
+		"queue":  ["Đông khách ghê!", "Thơm quá đi!", "Nghe nói quán này ngon lắm", "Chờ chút cũng đáng!", "Đói bụng quá rồi...", "Quán xinh ghê!"],
+		"eat":    ["Ngon tuyệt!", "Đậm đà quá!", "Nóng hổi luôn!", "Ăn là ghiền!", "Chuẩn vị nhà làm!", "Mai ghé nữa!"],
+		"golden": ["Ta trả gấp mười!", "Phục vụ ta trước nhé!", "Món ngon thì tiền không thành vấn đề!"],
+		"picky":  ["Nhanh lên giùm!", "Sao lâu vậy?", "Tôi không chờ được đâu!"],
+		"tourist":["Wow, Việt Nam!", "Chụp một tấm nào!", "Delicious!"]
+	}
+}

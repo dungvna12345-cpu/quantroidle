@@ -1,0 +1,42 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html, body { margin: 0; background: transparent; } svg { display: block; }</style></head>
+<body>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#fff0c0"/><stop offset="0.55" stop-color="#ffbf5e"/><stop offset="1" stop-color="#e8743a"/>
+    </radialGradient>
+    <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0705a"/><stop offset="1" stop-color="#b8332c"/></linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4dc"/><stop offset="1" stop-color="#f0d4a2"/></linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9743f"/><stop offset="1" stop-color="#8a5028"/></linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a0"/><stop offset="1" stop-color="#ffb84d"/></linearGradient>
+    <radialGradient id="lantern" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#fff2a0"/><stop offset="0.4" stop-color="#ffb347"/><stop offset="1" stop-color="#d6313f"/></radialGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9e2ea"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#4a1f0a" flood-opacity="0.45"/></filter>
+  </defs>
+  <rect x="8" y="8" width="496" height="496" rx="110" fill="url(#bg)" stroke="#6b2f12" stroke-width="12"/>
+  <path d="M60 70 Q256 10 452 70" stroke="#ffffff" stroke-width="18" fill="none" stroke-linecap="round" opacity="0.35"/>
+  <g filter="url(#sh)">
+    <rect x="130" y="200" width="252" height="170" rx="12" fill="url(#wall)" stroke="#5a341f" stroke-width="9"/>
+    <rect x="152" y="232" width="62" height="62" rx="10" fill="url(#win)" stroke="#5a341f" stroke-width="7"/>
+    <rect x="298" y="232" width="62" height="62" rx="10" fill="url(#win)" stroke="#5a341f" stroke-width="7"/>
+    <path d="M228 370 V280 Q256 250 284 280 V370 Z" fill="url(#wood)" stroke="#5a341f" stroke-width="8"/>
+    <path d="M96 208 Q140 190 160 150 L352 150 Q372 190 416 208 Q424 220 406 220 L106 220 Q88 220 96 208 Z" fill="url(#roof)" stroke="#5a341f" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M160 150 Q200 86 256 78 Q312 86 352 150 Z" fill="url(#roof)" stroke="#5a341f" stroke-width="9" stroke-linejoin="round"/>
+    <circle cx="256" cy="72" r="13" fill="#ffd34d" stroke="#5a341f" stroke-width="6"/>
+    <path d="M118 220 V238" stroke="#5a341f" stroke-width="4"/><ellipse cx="118" cy="266" rx="24" ry="28" fill="url(#lantern)" stroke="#5a341f" stroke-width="6"/>
+    <path d="M394 220 V238" stroke="#5a341f" stroke-width="4"/><ellipse cx="394" cy="266" rx="24" ry="28" fill="url(#lantern)" stroke="#5a341f" stroke-width="6"/>
+    <g transform="translate(256 400)">
+      <path d="M-30 -14 Q-56 -60 -40 -96" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.85"/>
+      <path d="M26 -14 Q4 -54 22 -92" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.85"/>
+      <path d="M-110 -10 Q-102 74 0 74 Q102 74 110 -10 Z" fill="url(#bowl)" stroke="#5a341f" stroke-width="9"/>
+      <ellipse cx="0" cy="-10" rx="110" ry="30" fill="#f6c86e" stroke="#5a341f" stroke-width="9"/>
+      <path d="M-62 -10 q16 -12 32 0 q16 12 32 0 q16 -12 32 0" stroke="#fff8e6" stroke-width="7" fill="none"/>
+      <circle cx="-44" cy="-16" r="11" fill="#7cc96b"/><circle cx="56" cy="-8" r="10" fill="#e85d5d"/>
+      <path d="M-74 46 Q0 64 74 46" stroke="#4fa3e0" stroke-width="7" fill="none" stroke-dasharray="12 12"/>
+      <path d="M70 -100 L24 -2 M90 -92 L42 0" stroke="#a96a3c" stroke-width="10" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
+</body></html>

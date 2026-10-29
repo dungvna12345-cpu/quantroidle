@@ -1,0 +1,6 @@
+{
+	"plant":    {"name": "Chậu cây",         "sprite": "plant_pot",  "bonus": 0.03, "cost": 150, "cost_mul": 2.2},
+	"lantern":  {"name": "Đèn lồng",         "sprite": "lantern",    "bonus": 0.04, "cost": 300, "cost_mul": 2.2},
+	"painting": {"name": "Tranh treo tường", "sprite": "painting_l", "bonus": 0.05, "cost": 500, "cost_mul": 2.4},
+	"rug":      {"name": "Thảm",             "sprite": "rug",        "bonus": 0.08, "cost": 900, "cost_mul": 2.5}
+}

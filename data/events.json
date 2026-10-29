@@ -1,0 +1,12 @@
+{
+	"first_delay": 50,
+	"interval_min": 90,
+	"interval_max": 150,
+	"list": [
+		{"id": "rush",     "name": "Giờ cao điểm!",       "desc": "Khách kéo đến nhanh gấp 3",          "duration": 40, "spawn_mult": 3.0},
+		{"id": "festival", "name": "Lễ hội ẩm thực!",     "desc": "Mọi món bán giá x2",                 "duration": 45, "price_mult": 2.0},
+		{"id": "rich",     "name": "Khách sộp ghé quán!", "desc": "Khách áo vàng trả gấp 10",           "duration": 60, "golden": 3},
+		{"id": "tip_rain", "name": "Mưa tiền boa!",       "desc": "Chạm nhặt đồng vàng trên các bàn",   "duration": 25, "tips": 1.5}
+	],
+	"golden_mult": 10.0
+}

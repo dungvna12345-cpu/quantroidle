@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="150" viewBox="0 0 160 150">
+  <defs>
+    <radialGradient id="g_glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.6" stop-color="#ffb894" stop-opacity="0.6" />
+      <stop offset="1" stop-color="#ffb894" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="g_shad" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#36170d" stop-opacity="0.28" />
+      <stop offset="1" stop-color="#36170d" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="g_face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.6" stop-color="#fff8f0" />
+      <stop offset="1" stop-color="#faeee0" />
+    </linearGradient>
+  </defs>
+  <!-- Glow -->
+  <rect x="0" y="0" width="160" height="150" rx="30" fill="url(#g_glow)" />
+  <!-- Shadow -->
+  <ellipse cx="80" cy="144" rx="66" ry="6" fill="url(#g_shad)" />
+  <!-- 3D base depth -->
+  <rect x="8" y="14" width="144" height="126" rx="26" fill="#e07d6b" stroke="#7a4b3a" stroke-width="3.5" />
+  <!-- Card face with coral selected rim -->
+  <rect x="8" y="8" width="144" height="126" rx="26" fill="url(#g_face)" stroke="#f08370" stroke-width="4.5" />
+  <!-- Inner warm border -->
+  <rect x="12" y="12" width="136" height="118" rx="22" fill="none" stroke="#fed8cb" stroke-width="2" />
+</svg>

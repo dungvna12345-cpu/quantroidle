@@ -1,0 +1,18 @@
+{
+	"spin_cost": 10,
+	"segments": [
+		{"type": "gold",     "minutes": 5,  "label": "Vàng",        "icon": "coin",         "color": "#ffd34d", "weight": 22},
+		{"type": "diamonds", "n": 5,        "label": "5",           "icon": "diamond",      "color": "#4fc3f7", "weight": 18},
+		{"type": "rp",       "n": 1,        "label": "1",           "icon": "icon_rp",      "color": "#7bd35b", "weight": 14},
+		{"type": "gold",     "minutes": 20, "label": "Vàng x4",     "icon": "gold_bag",     "color": "#ff9f43", "weight": 12},
+		{"type": "card",     "n": 1,        "label": "Thẻ",         "icon": "icon_cards",   "color": "#b98af0", "weight": 10},
+		{"type": "boost",    "minutes": 10, "label": "x2",          "icon": "bolt",         "color": "#ff6b6b", "weight": 12},
+		{"type": "diamonds", "n": 25,       "label": "25",          "icon": "diamond",      "color": "#5fd1c4", "weight": 6},
+		{"type": "chest",    "chest": "chest_gold", "label": "Rương", "icon": "chest_gold", "color": "#ef7fb0", "weight": 6}
+	],
+	"chests": {
+		"chest_wood":   {"name": "Rương gỗ",  "gold_minutes": 5,  "diamonds": [3, 8],   "rp": [0, 1], "cards": 0},
+		"chest_silver": {"name": "Rương bạc", "gold_minutes": 15, "diamonds": [8, 15],  "rp": [1, 2], "cards": 1},
+		"chest_gold":   {"name": "Rương vàng","gold_minutes": 40, "diamonds": [15, 30], "rp": [2, 4], "cards": 2}
+	}
+}

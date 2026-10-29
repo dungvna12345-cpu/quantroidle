@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="g_roof" cx="0.4" cy="0.3" r="0.7">
+      <stop offset="0" stop-color="#ff7b6b" />
+      <stop offset="1" stop-color="#d64336" />
+    </radialGradient>
+    <linearGradient id="g_wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8" />
+      <stop offset="1" stop-color="#f3e8d5" />
+    </linearGradient>
+  </defs>
+  <!-- Shop Building Body -->
+  <rect x="24" y="56" width="80" height="52" rx="6" fill="url(#g_wall)" stroke="#7a4228" stroke-width="4.5" />
+  <!-- Door / Window -->
+  <rect x="48" y="74" width="32" height="34" rx="4" fill="#a4d4e6" stroke="#5a8ca0" stroke-width="3" />
+  <rect x="28" y="74" width="14" height="24" rx="3" fill="#ffe09c" stroke="#b59048" stroke-width="2.5" />
+  <rect x="86" y="74" width="14" height="24" rx="3" fill="#ffe09c" stroke="#b59048" stroke-width="2.5" />
+  <!-- Awning Slopes (red and white stripes) -->
+  <path d="M14,56 L20,32 L36,32 L32,56 Z" fill="url(#g_roof)" stroke="#7a4228" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M32,56 L36,32 L52,32 L48,56 Z" fill="#ffffff" stroke="#7a4228" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M48,56 L52,32 L76,32 L72,56 Z" fill="url(#g_roof)" stroke="#7a4228" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M72,56 L76,32 L92,32 L88,56 Z" fill="#ffffff" stroke="#7a4228" stroke-width="3.5" stroke-linejoin="round" />
+  <path d="M88,56 L92,32 L108,32 L114,56 Z" fill="url(#g_roof)" stroke="#7a4228" stroke-width="3.5" stroke-linejoin="round" />
+  <!-- Awning scallop valance at bottom -->
+  <path d="M14,56 Q23,65 32,56 Q40,65 48,56 Q60,65 72,56 Q80,65 88,56 Q101,65 114,56" fill="none" stroke="#7a4228" stroke-width="4" stroke-linecap="round" />
+</svg>

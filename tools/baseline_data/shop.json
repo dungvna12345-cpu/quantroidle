@@ -1,0 +1,6 @@
+[
+	{"id": "x2",    "name": "Thu nhập x2",         "desc": "Nhân đôi mọi thu nhập trong 30 phút",      "icon": "bolt",     "cost": 20, "type": "boost", "minutes": 30},
+	{"id": "rush",  "name": "Gọi khách hàng loạt", "desc": "10 khách kéo đến quán ngay lập tức",       "icon": "heart",    "cost": 5,  "type": "rush",  "count": 10},
+	{"id": "bag_s", "name": "Túi vàng",            "desc": "Nhận số vàng bằng 15 phút kinh doanh",     "icon": "gold_bag", "cost": 10, "type": "gold",  "minutes": 15,  "min_gold": 500},
+	{"id": "bag_l", "name": "Rương vàng",          "desc": "Nhận số vàng bằng 2 giờ kinh doanh",       "icon": "gift",     "cost": 50, "type": "gold",  "minutes": 120, "min_gold": 5000}
+]

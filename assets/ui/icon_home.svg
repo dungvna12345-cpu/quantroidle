@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#93c48d"/>
+      <stop offset="100%" stop-color="#6a9b64"/>
+    </linearGradient>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0ebe0"/>
+    </linearGradient>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="64" cy="116" rx="42" ry="7" fill="#000000" opacity="0.15"/>
+  <!-- Body/Walls -->
+  <path d="M 32 60 L 96 60 L 96 110 A 6 6 0 0 1 90 116 L 38 116 A 6 6 0 0 1 32 110 Z" fill="url(#wallGrad)" stroke="#4e331e" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Door -->
+  <path d="M 52 116 L 52 82 A 12 12 0 0 1 76 82 L 76 116 Z" fill="#b07044" stroke="#4e331e" stroke-width="5" stroke-linejoin="round"/>
+  <!-- Door knob -->
+  <circle cx="70" cy="98" r="3" fill="#ffe082"/>
+  <!-- Roof -->
+  <path d="M 18 64 Q 64 20 64 20 Q 64 20 110 64 Q 116 70 108 72 L 98 72 L 64 38 L 30 72 L 20 72 Q 12 70 18 64 Z" fill="url(#roofGrad)" stroke="#4e331e" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Roof highlight -->
+  <path d="M 28 60 Q 64 25 64 25" stroke="#bfe8b9" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

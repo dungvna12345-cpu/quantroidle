@@ -1,0 +1,11 @@
+[
+	{"id": "income",  "tier": 1, "name": "Bí quyết", "desc": "+10% thu nhập mỗi cấp",           "icon": "coin",       "max": 10, "cost": 1, "cost_add": 1, "value": 0.10},
+	{"id": "cook",    "tier": 1, "name": "Bếp lửa hồng",        "desc": "+8% tốc độ nấu mỗi cấp",          "icon": "icon_pot",   "max": 10, "cost": 1, "cost_add": 1, "value": 0.08},
+	{"id": "walk",    "tier": 1, "name": "Giày nhanh",      "desc": "+6% tốc độ đi của mọi người",     "icon": "bolt",       "max": 5,  "cost": 2, "cost_add": 1, "value": 0.06},
+	{"id": "spawn",   "tier": 2, "name": "Tiếng lành",   "desc": "+8% khách kéo đến mỗi cấp",       "icon": "heart",      "max": 8,  "cost": 2, "cost_add": 2, "value": 0.08, "need": 5},
+	{"id": "tip",     "tier": 2, "name": "Tận tâm",     "desc": "+3% cơ hội nhận tiền boa",        "icon": "gold_bag",   "max": 8,  "cost": 2, "cost_add": 1, "value": 0.03, "need": 5},
+	{"id": "offline", "tier": 2, "name": "Két sắt lớn",         "desc": "+1 giờ thu nhập offline tối đa",  "icon": "clock",      "max": 6,  "cost": 3, "cost_add": 2, "value": 1.0,  "need": 5},
+	{"id": "order",   "tier": 3, "name": "Tiệc cưới",  "desc": "+25% thưởng đơn đặt tiệc",        "icon": "icon_order", "max": 8,  "cost": 3, "cost_add": 2, "value": 0.25, "need": 15},
+	{"id": "golden",  "tier": 3, "name": "Khách sộp",  "desc": "Khách vàng trả thêm x2 mỗi cấp",  "icon": "icon_event", "max": 5,  "cost": 4, "cost_add": 2, "value": 2.0,  "need": 15},
+	{"id": "event",   "tier": 3, "name": "Lịch sự kiện",        "desc": "Sự kiện xuất hiện thường hơn 10%", "icon": "icon_book",  "max": 5,  "cost": 4, "cost_add": 3, "value": 0.10, "need": 15}
+]

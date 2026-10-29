@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="g_gold" cx="0.4" cy="0.3" r="0.7">
+      <stop offset="0" stop-color="#fff2a8" />
+      <stop offset="0.5" stop-color="#ffd24d" />
+      <stop offset="1" stop-color="#d99318" />
+    </radialGradient>
+    <linearGradient id="g_base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a46845" />
+      <stop offset="1" stop-color="#6e3f24" />
+    </linearGradient>
+  </defs>
+  <!-- Trophy handles -->
+  <path d="M34,36 C14,36 14,72 38,72" fill="none" stroke="#6b3f24" stroke-width="8" stroke-linecap="round" />
+  <path d="M34,36 C14,36 14,72 38,72" fill="none" stroke="#ffd24d" stroke-width="4.5" stroke-linecap="round" />
+  <path d="M94,36 C114,36 114,72 90,72" fill="none" stroke="#6b3f24" stroke-width="8" stroke-linecap="round" />
+  <path d="M94,36 C114,36 114,72 90,72" fill="none" stroke="#ffd24d" stroke-width="4.5" stroke-linecap="round" />
+  <!-- Trophy cup body -->
+  <path d="M30,22 L98,22 C98,22 96,68 64,74 C32,68 30,22 30,22 Z" fill="url(#g_gold)" stroke="#6b3f24" stroke-width="4.5" stroke-linejoin="round" />
+  <!-- Trophy stem & foot -->
+  <path d="M58,74 L70,74 L74,96 L54,96 Z" fill="url(#g_gold)" stroke="#6b3f24" stroke-width="4" stroke-linejoin="round" />
+  <!-- Base block -->
+  <rect x="36" y="96" width="56" height="18" rx="4" fill="url(#g_base)" stroke="#4a2612" stroke-width="4" />
+  <rect x="42" y="100" width="44" height="10" rx="2" fill="#ffd24d" opacity="0.8" />
+  <!-- Star on cup -->
+  <polygon points="64,36 67,44 75,44 69,49 71,57 64,52 57,57 59,49 53,44 61,44" fill="#ffffff" stroke="#c48512" stroke-width="1.5" />
+</svg>

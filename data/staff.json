@@ -1,0 +1,27 @@
+{
+	"chef": {
+		"name": "Đầu bếp", "sprite": "chef", "desc": "Nấu món nhanh hơn",
+		"unlock_level": 1, "start_count": 1, "max_count": 3,
+		"hire_base": 150, "hire_mul": 5, "upgrade_base": 30, "speed_per_level": 0.1
+	},
+	"waiter": {
+		"name": "Bồi bàn", "sprite": "waiter", "desc": "Dẫn khách và mang món",
+		"unlock_level": 1, "start_count": 1, "max_count": 4,
+		"hire_base": 90, "hire_mul": 4, "upgrade_base": 25, "speed_per_level": 0.08
+	},
+	"cashier": {
+		"name": "Thu ngân", "sprite": "cashier", "desc": "Tính tiền nhanh hơn",
+		"unlock_level": 2, "start_count": 1, "max_count": 2,
+		"hire_base": 400, "hire_mul": 6, "upgrade_base": 35, "speed_per_level": 0.12
+	},
+	"receptionist": {
+		"name": "Lễ tân", "sprite": "receptionist", "desc": "Mời thêm khách, khách kiên nhẫn hơn",
+		"unlock_level": 3, "start_count": 0, "max_count": 2,
+		"hire_base": 250, "hire_mul": 8, "upgrade_base": 60, "speed_per_level": 0.06,
+		"spawn_bonus": 0.2, "patience_bonus": 0.5
+	},
+	"manager": {
+		"name": "Quản lý", "sprite": "manager", "desc": "Quán tự vận hành: nhặt tiền boa, khách không bỏ về, thu nhập offline 100%",
+		"unlock_level": 5, "cost": 1500
+	}
+}

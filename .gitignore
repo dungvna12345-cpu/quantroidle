@@ -1,0 +1,26 @@
+# Godot 4-specific ignores
+.godot/
+build/
+android/
+*.translation
+
+# Temporary test captures and logs
+captured_*.jpg
+client_*.jpg
+frame_*.jpg
+*.log
+tools/*.jpg
+tools/*.png
+tools/cloudflared.exe
+tools/godot_stream_temp.jpg
+scratch/
+__pycache__/
+*.pyc
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

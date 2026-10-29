@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="g1" cx="0.4" cy="0.35" r="0.6">
+      <stop offset="0" stop-color="#84db72" />
+      <stop offset="0.7" stop-color="#5abf47" />
+      <stop offset="1" stop-color="#419e2f" />
+    </radialGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#eaf7e6" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle/shield -->
+  <circle cx="64" cy="64" r="54" fill="url(#g1)" stroke="#347826" stroke-width="4.5" />
+  <!-- Gloss highlight -->
+  <path d="M26,52 A46,46 0 0 1 102,52 A46,36 0 0 0 26,52 Z" fill="#ffffff" opacity="0.35" />
+  <!-- Thick Upward Arrow -->
+  <path d="M64,22 L94,54 L76,54 L76,96 L52,96 L52,54 L34,54 Z" fill="url(#g2)" stroke="#2b6b1f" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" />
+  <!-- Inner arrow highlight -->
+  <path d="M64,28 L86,52 L72,52 L72,92 L64,92 Z" fill="#ffffff" opacity="0.6" />
+</svg>

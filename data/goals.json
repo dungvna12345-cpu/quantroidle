@@ -1,0 +1,50 @@
+{
+	"stars_per_goals": 2,
+	"star_rewards": [
+		{"chest": "chest_wood",   "diamonds": 10, "rp": 2},
+		{"chest": "chest_silver", "diamonds": 15, "rp": 3},
+		{"chest": "chest_gold",   "diamonds": 25, "rp": 5}
+	],
+	"chapters": [
+		[
+			{"type": "level",     "n": 12},
+			{"type": "tables",    "n": 5},
+			{"type": "dish",      "id": "banh_mi", "n": 8},
+			{"type": "customers", "n": 1200},
+			{"type": "staff",     "id": "waiter", "n": 3},
+			{"type": "area",      "id": "garden"}
+		],
+		[
+			{"type": "level",     "n": 16},
+			{"type": "tables",    "n": 8},
+			{"type": "dish",      "id": "pho", "n": 10},
+			{"type": "customers", "n": 3200},
+			{"type": "earn",      "n": 500000},
+			{"type": "decor",     "n": 5}
+		],
+		[
+			{"type": "level",     "n": 19},
+			{"type": "tables",    "n": 12},
+			{"type": "area",      "id": "vip"},
+			{"type": "dish",      "id": "banh_xeo", "n": 12},
+			{"type": "customers", "n": 6000},
+			{"type": "staff",     "id": "chef", "n": 3}
+		],
+		[
+			{"type": "level",     "n": 22},
+			{"type": "tables",    "n": 15},
+			{"type": "area",      "id": "lodging"},
+			{"type": "dish",      "id": "lau", "n": 15},
+			{"type": "customers", "n": 9000},
+			{"type": "earn",      "n": 500000000}
+		],
+		[
+			{"type": "level",     "n": 24},
+			{"type": "tables",    "n": 20},
+			{"type": "dish",      "id": "cao_lau", "n": 10},
+			{"type": "customers", "n": 12000},
+			{"type": "decor",     "n": 15},
+			{"type": "rooms",     "n": 6}
+		]
+	]
+}

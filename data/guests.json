@@ -1,0 +1,68 @@
+[
+  {
+    "id": "shipper",
+    "name": "Anh Shipper Chạy Deadline",
+    "avatar": "customer_regular",
+    "fav_dish": "Bánh Mì Chảo",
+    "quote": "Bát phở 3 phút xong chưa em ơi, đơn nổ sắp trễ giờ rồi!",
+    "story": "Người đàn ông chạy xe nhanh nhất phố, ghé quán trọ mỗi ngày vào giờ trưa. Ăn nhanh như chớp mắt nhưng lúc nào cũng boa tiền thừa vì 'quán nấu ngon quá không kịp cảm ơn'.",
+    "milestone": 10,
+    "reward_diamonds": 5,
+    "perk": "+5% Tốc độ bồi bàn"
+  },
+  {
+    "id": "genz",
+    "name": "Nàng Gen Z Check-in",
+    "avatar": "customer_tourist",
+    "fav_dish": "Trà Đào Cam Sả",
+    "quote": "Đồ ăn đẹp xỉu, góc quán trọ này lên hình phải được 1000 tim!",
+    "story": "Một food-reviewer không chuyên với chiếc điện thoại 3 mắt. Trước khi ăn phải chụp 20 tấm từ mọi góc. Đánh giá 5 sao kèm bài viết dài 3 trang khen ngợi không gian quán.",
+    "milestone": 15,
+    "reward_diamonds": 8,
+    "perk": "+8% Tiền boa bàn ăn"
+  },
+  {
+    "id": "chess_grandpa",
+    "name": "Cụ Ông Cờ Tướng",
+    "avatar": "customer_picky",
+    "fav_dish": "Cơm Lam Tây Bắc",
+    "quote": "Nước dùng này ninh chưa tới 6 tiếng là biết ngay, nhưng vẫn khen!",
+    "story": "Khách quen từ những ngày đầu lập nghiệp. Thích ngồi bàn góc vườn nhâm nhi tách trà nóng, thỉnh thoảng chỉ nước đi cờ cho khách bàn bên và kể chuyện Hà Nội xưa.",
+    "milestone": 20,
+    "reward_diamonds": 10,
+    "perk": "+10% Kiên nhẫn của khách"
+  },
+  {
+    "id": "muse",
+    "name": "Nàng Thơ Áo Dài",
+    "avatar": "staff_mai",
+    "fav_dish": "Bún Đậu Mắm Tôm",
+    "quote": "Hương vị quê nhà làm lòng em xao xuyến mãi không quên.",
+    "story": "Cô gái dịu dàng với tà áo dài thướt tha. Nụ cười của nàng mỗi khi bước vào quán làm bừng sáng cả không gian, khiến các bàn xung quanh ai nấy đều ăn ngon miệng hơn.",
+    "milestone": 25,
+    "reward_diamonds": 12,
+    "perk": "+5% Khách VIP ghé quán"
+  },
+  {
+    "id": "wealth_god",
+    "name": "Thần Tài Phú Quý",
+    "avatar": "card_kim_phat",
+    "fav_dish": "Tôm Hùm Nướng Bơ Tỏi",
+    "quote": "Tấn tài tấn lộc! Quán trọ làm ăn thịnh vượng, buôn may bán đắt!",
+    "story": "Vị khách thần tiên giáng trần trong lốt thương nhân giàu sang. Mỗi bước chân của ngài tỏa ánh vàng rực rỡ, trả hóa đơn hào phóng gấp bội và ban phước lành may mắn.",
+    "milestone": 5,
+    "reward_diamonds": 15,
+    "perk": "+10% Toàn bộ thu nhập vàng"
+  },
+  {
+    "id": "critic",
+    "name": "Nhà Phê Bình Khó Tính",
+    "avatar": "customer_picky",
+    "fav_dish": "Bào Ngư Sốt Dầu Hào",
+    "quote": "Hương vị đạt chuẩn Michelin! Xứng đáng được vinh danh trên tạp chí.",
+    "story": "Chuyên gia ẩm thực giấu mặt với cuốn sổ tay bìa da. Từng chê thậm tệ 99 nhà hàng khác, nhưng quán trọ đã chinh phục ngài bằng tình yêu trong từng món ăn truyền thống.",
+    "milestone": 8,
+    "reward_diamonds": 10,
+    "perk": "+15% Giá trị món đặc sản"
+  }
+]

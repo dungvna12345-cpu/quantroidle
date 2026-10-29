@@ -1,0 +1,11 @@
+{
+	"slots": 3,
+	"themes": ["Tiệc cưới", "Sinh nhật", "Họp lớp", "Tiệc công ty", "Đám giỗ", "Mừng tân gia", "Liên hoan", "Đầy tháng"],
+	"base_count": 6,
+	"count_per_level": 0.5,
+	"reward_minutes": 4.0,
+	"min_gold": 300,
+	"diamonds_min": 1,
+	"diamonds_max": 3,
+	"skip_diamonds": 3
+}

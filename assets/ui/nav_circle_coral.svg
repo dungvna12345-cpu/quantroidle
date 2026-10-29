@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="252" viewBox="0 0 240 252">
+  <defs>
+    <radialGradient id="g_shad" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#36170d" stop-opacity="0.35" />
+      <stop offset="1" stop-color="#36170d" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="g_rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff8ed" />
+      <stop offset="0.5" stop-color="#feddbd" />
+      <stop offset="1" stop-color="#e2ab86" />
+    </linearGradient>
+    <radialGradient id="g_coral" cx="0.45" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#ff907d" />
+      <stop offset="0.5" stop-color="#f0725e" />
+      <stop offset="0.9" stop-color="#d6513d" />
+      <stop offset="1" stop-color="#b83f2e" />
+    </radialGradient>
+  </defs>
+  <!-- Shadow under button -->
+  <ellipse cx="120" cy="238" rx="98" ry="14" fill="url(#g_shad)" />
+  <!-- 3D base depth -->
+  <circle cx="120" cy="128" r="104" fill="#a43525" stroke="#7a2417" stroke-width="4.5" />
+  <!-- Golden cream outer ring -->
+  <circle cx="120" cy="118" r="104" fill="url(#g_rim)" stroke="#7a2417" stroke-width="4.5" />
+  <!-- Coral button face -->
+  <circle cx="120" cy="116" r="92" fill="url(#g_coral)" stroke="#9e2e1e" stroke-width="3" />
+  <!-- Curved gloss highlight on top -->
+  <path d="M48,86 Q120,18 192,86 Q120,48 48,86 Z" fill="#ffffff" opacity="0.4" />
+</svg>
