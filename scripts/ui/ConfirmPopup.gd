@@ -23,5 +23,7 @@ func _build(b: VBoxContainer) -> void:
 
 
 func _answer(yes: bool) -> void:
+	if _closing:
+		return
 	answered.emit(yes)
 	close()

@@ -14,6 +14,8 @@ const CashierScene := preload("res://scenes/inn/Cashier.tscn")
 const InnPetScript := preload("res://scripts/inn/InnPet.gd")
 const SneakyThiefScript := preload("res://scripts/inn/SneakyThief.gd")
 const TravelingMerchantScript := preload("res://scripts/inn/TravelingMerchant.gd")
+const ShipperScript := preload("res://scripts/inn/Shipper.gd")
+const ChapterAmbienceScript := preload("res://scripts/fx/ChapterAmbience.gd")
 const FortuneGodScript := preload("res://scripts/inn/FortuneGod.gd")
 const WeatherSystemScript := preload("res://scripts/fx/WeatherSystem.gd")
 const PAY_SPOTS := 5
@@ -56,6 +58,9 @@ var manager_sprite: Sprite2D
 var pet: Node2D = null
 var thief: Node2D = null
 var merchant: Node2D = null
+var shipper: Node2D = null
+var _shipper_timer: float = 12.0
+var ambience: Node2D = null
 var fortune_god: Node2D = null
 var weather: Node2D = null
 var aisle_cols: Array = []
@@ -63,6 +68,7 @@ var aisle_rows: Array = []
 var _thief_spawn_timer: float = 35.0
 var _merchant_spawn_timer: float = 45.0
 var _fortune_god_spawn_timer: float = 65.0
+var _koi_last_ms: int = -100000
 var _critic_spawn_timer: float = 85.0
 var _decor_nodes: Array[Node] = []
 var _wing_tiles: Dictionary = {}     # wing id -> [Sprite2D]
@@ -104,6 +110,7 @@ func setup(id: String) -> void:
 	_build_glows()
 	_build_ambient()
 	_build_weather()
+	_build_chapter_ambience()
 	refresh()
 	GameState.state_changed.connect(refresh)
 	GameState.area_changed.connect(_on_area_changed)
@@ -604,6 +611,7 @@ func _build_ambient() -> void:
 	if weather != null and is_instance_valid(weather):
 		weather.queue_free()
 	weather = WeatherSystemScript.new()
+	weather.z_index = 75
 	add_child(weather)
 
 
@@ -764,10 +772,13 @@ func _process(delta: float) -> void:
 	if kind == "dining":
 		_dispatch_dining()
 		_update_payers()
-		_update_thief(delta)
-		_update_merchant(delta)
-		_update_fortune_god(delta)
-		_update_critic(delta)
+		# khách đặc biệt chỉ xuất hiện ở khu đang xem (khu ẩn không chạm được, toast bị lẫn)
+		if area_id == GameState.current_area:
+			_update_thief(delta)
+			_update_merchant(delta)
+			_update_fortune_god(delta)
+			_update_critic(delta)
+			_update_shipper(delta)
 	else:
 		_dispatch_lodging()
 	_chatter(delta)
@@ -899,6 +910,53 @@ func _build_weather() -> void:
 		add_child(weather)
 
 
+## Không khí riêng của chương (lá vàng, đèn lồng, neon, sương, mai vàng) phủ trên cảnh.
+func _build_chapter_ambience() -> void:
+	var mode := str(GameState.chapter_info().get("ambience", ""))
+	if mode.is_empty():
+		return
+	var corners: Array[Vector2] = [Iso.to_world(Vector2(0, 0)), Iso.to_world(Vector2(size_w, 0)),
+		Iso.to_world(Vector2(0, size_h)), Iso.to_world(Vector2(size_w, size_h)),
+		Iso.to_world(Vector2(float(size_w) + 3.0, road_y)), Iso.to_world(Vector2(-3.0, road_y))]
+	var r := Rect2(corners[0], Vector2.ZERO)
+	for c in corners:
+		r = r.expand(c)
+	r = r.grow_individual(120.0, 360.0, 120.0, 120.0)
+	ambience = ChapterAmbienceScript.new()
+	ambience.z_index = 74
+	add_child(ambience)
+	ambience.setup(mode, r)
+
+
+## Sài Gòn: shipper ghé cổng nhận đơn giao hàng.
+func _update_shipper(delta: float) -> void:
+	if GameState.feature_id() != "delivery":
+		return
+	if shipper != null and is_instance_valid(shipper):
+		return
+	_shipper_timer -= delta
+	if _shipper_timer > 0.0:
+		return
+	var iv: Array = GameState.chapter_feature().get("interval", [35, 60])
+	_shipper_timer = randf_range(float(iv[0]), float(iv[1]))
+	_spawn_shipper()
+
+
+func _spawn_shipper() -> void:
+	shipper = ShipperScript.new()
+	objects.add_child(shipper)
+	shipper.wait_time = float(GameState.chapter_feature().get("wait", 20))
+	shipper.exit_point = Vector2(-6.0, road_y)
+	shipper.place(Vector2(float(size_w) + 4.0, road_y))
+	shipper.walk(PackedVector2Array([Vector2(float(gate_x) + 1.6, road_y)]))
+	shipper.left.connect(func() -> void:
+		if shipper != null and is_instance_valid(shipper):
+			shipper.queue_free()
+			shipper = null
+	)
+	AudioManager.play("whoosh")
+
+
 ## Thỉnh thoảng một vị khách nói gì đó cho quán thêm sống động.
 func _chatter(delta: float) -> void:
 	if not visible:
@@ -965,6 +1023,7 @@ func _roll_type() -> String:
 		return "wealth"
 	if r < 0.08:
 		return "critic"
+	r -= 0.08
 	if r < g.bal("picky_chance", 0.12):
 		return "picky"
 	r -= g.bal("picky_chance", 0.12)
@@ -1071,11 +1130,10 @@ func deliver(o: Dictionary) -> void:
 func _bill(c: Customer) -> float:
 	var v: float = GameState.dish_sell_price(c.dish_id) * GameState.table_mult(area_id, c.table) * float(info["price_mult"])
 	v *= GameState.wing_price_mult(area_id, c.table)
+	# khách sộp ("wealth") luôn có golden = true nên đã được nhân golden_mult ở đây, không nhân thêm x10
 	if c.golden:
 		v *= GameState.golden_mult()
 	match c.ctype:
-		"wealth":
-			v *= 10.0
 		"critic":
 			v *= 3.0
 		"tourist":
@@ -1096,7 +1154,7 @@ func customer_finished_eating(c: Customer) -> void:
 		GameState.show_toast("Thần Tài gửi lại 1 Kim Cương lộc! 💎")
 	elif c.ctype == "critic":
 		GameState.show_toast("Nhà Phê Bình Bác Sáu đánh giá 5 SAO! ⭐⭐⭐⭐⭐")
-		if UIKit.main:
+		if UIKit.main and area_id == GameState.current_area:
 			UIKit.main.call_deferred("open_food_critic")
 	c.set_state(Customer.S.WAIT_PAY)
 	wait_pay.append(c)
@@ -1282,12 +1340,17 @@ func tap(p: Vector2) -> bool:
 		if UIKit.main and randf() < 0.5:
 			UIKit.main.call_deferred("open_pet")
 		return true
+	if shipper and is_instance_valid(shipper) and shipper.can_deliver() and shipper.hit_rect().has_point(p):
+		var g: float = shipper.deliver()
+		GameState.request_coin_fx(to_global(shipper.position + Vector2(0, -60)), g)
+		return true
 	if merchant and is_instance_valid(merchant) and merchant.visible and merchant.hit_rect().has_point(p):
 		merchant.interact()
 		if UIKit.main:
 			UIKit.main.call("open_mystery_chest")
 		return true
-	if fortune_god and is_instance_valid(fortune_god) and fortune_god.visible and fortune_god.hit_rect().has_point(p):
+	if fortune_god and is_instance_valid(fortune_god) and fortune_god.is_active() and fortune_god.visible \
+			and fortune_god.hit_rect().has_point(p):
 		fortune_god.interact()
 		return true
 	if kitchen and kitchen.visible and kitchen.hit_rect().has_point(p):
@@ -1354,6 +1417,11 @@ func tap(p: Vector2) -> bool:
 
 
 func _feed_koi(p: Vector2) -> void:
+	# hồi chiêu 3 giây: trước đây chạm liên tục được vàng + kim cương không giới hạn
+	var now := Time.get_ticks_msec()
+	if now - _koi_last_ms < 3000:
+		return
+	_koi_last_ms = now
 	AudioManager.play("pop", 0.25)
 	AudioManager.vibrate(20)
 	var bubble := Sprite2D.new()

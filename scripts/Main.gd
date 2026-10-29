@@ -80,6 +80,8 @@ var _switching: bool = false
 
 func _ready() -> void:
 	UIKit.main = self
+	# bảng màu giao diện theo chương (scene được nạp lại mỗi khi sang chương)
+	ChapterTheme.apply()
 	_compute_safe_area()
 	_build_content()
 	_build_top_bar()
@@ -486,6 +488,8 @@ func _update_status_banner() -> void:
 		stat_lbl.text = "🔥 GIỜ VÀNG BÙNG NỔ! THU NHẬP x3 (%ds) 🔥" % int(ceil(GameState.fever_left()))
 	elif not GameState.current_event.is_empty():
 		stat_lbl.text = "SỰ KIỆN: " + str(GameState.current_event.get("name", "ĐANG DIỄN RA")).to_upper()
+	elif not GameState.feature_status().is_empty():
+		stat_lbl.text = GameState.feature_status()
 	elif GameState.is_evening():
 		stat_lbl.text = "TRẠNG THÁI: GIỜ CAO ĐIỂM (TỐI)"
 	elif GameState.boost_active():
@@ -754,6 +758,17 @@ func sparkle_at(screen_pos: Vector2) -> void:
 	var s: Node2D = SparkleScene.instantiate()
 	s.position = screen_pos
 	fx_layer.add_child(s)
+
+
+## Lấp lánh tại một điểm trong thế giới (toạ độ global của cảnh quán).
+func sparkle_at_world(world_pos: Vector2) -> void:
+	sparkle_at(world.global_to_screen(world_pos))
+
+
+## Nhiều đốm lấp lánh toả quanh một điểm màn hình.
+func burst_sparkles(screen_pos: Vector2, count: int) -> void:
+	for i in mini(count, 12):
+		sparkle_at(screen_pos + Vector2(randf_range(-60.0, 60.0), randf_range(-60.0, 60.0)))
 
 
 ## Đồng vàng bay toả từ một điểm màn hình lên ô vàng.

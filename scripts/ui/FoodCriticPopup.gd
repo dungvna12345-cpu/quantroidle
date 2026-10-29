@@ -6,6 +6,7 @@ extends PopupBase
 var _star_box: HBoxContainer
 var _review_quote: Label
 var _reward_label: Label
+var _claimed: bool = false
 var _claim_btn: JuicyButton
 var _critic_avatar: Control
 var _t: float = 0.0
@@ -141,12 +142,15 @@ func _draw_critic() -> void:
 	_critic_avatar.draw_line(hand_pos + Vector2(0, -4), hand_pos + Vector2(0, -12), Color("f59e0b"), 4.0)
 
 func _on_claim() -> void:
+	# chặn bấm 2 lần trong lúc popup đang mờ dần (từng nhận thưởng 2 lần)
+	if _claimed or _closing:
+		return
+	_claimed = true
 	AudioManager.play("legendary")
 	AudioManager.play("levelup", 0.2)
 	
 	var gems: int = int(_selected_review["diamonds"])
-	GameState.diamonds += gems
-	GameState.diamonds_changed.emit(GameState.diamonds)
+	GameState.add_diamonds(gems)
 	
 	var bonus_gold: float = maxf(100000.0, GameState.income_rate() * 60.0)
 	GameState.add_gold(bonus_gold)

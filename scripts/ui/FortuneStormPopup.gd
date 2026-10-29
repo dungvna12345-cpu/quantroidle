@@ -66,9 +66,9 @@ func _build(b: VBoxContainer) -> void:
 func _on_canvas_input(event: InputEvent) -> void:
 	if not _game_active:
 		return
+	# chỉ nghe chuột: project bật emulate_mouse_from_touch nên một lần chạm đã sinh sự kiện chuột,
+	# nghe thêm ScreenTouch sẽ bắt 2 bao lì xì cho một lần chạm
 	if event is InputEventMouseButton and event.pressed:
-		_check_click(event.position)
-	elif event is InputEventScreenTouch and event.pressed:
 		_check_click(event.position)
 
 func _check_click(pos: Vector2) -> void:

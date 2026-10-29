@@ -17,7 +17,7 @@ const PERKS := [
 	{"level": 2, "icon": "✨", "title": "Hút Khách Đại Tài", "desc": "Tăng 20% cơ hội xuất hiện Khách Sộp & Đại Gia VIP."},
 	{"level": 3, "icon": "🧹", "title": "Gom Tiền Thần Tốc", "desc": "Mỗi 15 giây tự động gom sạch toàn bộ tiền boa trên các bàn."},
 	{"level": 4, "icon": "🚨", "title": "Vệ Sĩ Quán Trọ", "desc": "Phát hiện và dọa tên trộm vàng bỏ chạy tức thì!"},
-	{"level": 5, "icon": "👑", "title": "Mèo Hoàng Kim", "desc": "Ban phước lành nhân 1.5x toàn bộ doanh thu vĩnh viễn!"}
+	{"level": 5, "icon": "👑", "title": "Mèo Hoàng Kim", "desc": "Ban phước lành +15% toàn bộ doanh thu vĩnh viễn!"}
 ]
 
 func _init() -> void:
@@ -94,7 +94,7 @@ func _build(b: VBoxContainer) -> void:
 	_refresh_ui()
 
 func _get_max_xp(lvl: int) -> float:
-	return 100.0 * float(lvl)
+	return GameState.pet_xp_needed(lvl)
 
 func _get_feed_cost() -> float:
 	return maxf(500.0, GameState.income_rate() * 18.0)
@@ -151,22 +151,17 @@ func _refresh_ui() -> void:
 
 func _on_feed() -> void:
 	var cost := _get_feed_cost()
-	if not GameState.spend_gold(cost):
+	if not GameState.try_spend(cost):
 		return
-		
+
 	AudioManager.play("purchase")
 	AudioManager.play("coin", 0.1)
-	
-	GameState.pet_xp += 35.0
-	var max_xp := _get_max_xp(GameState.pet_level)
-	if GameState.pet_xp >= max_xp:
-		GameState.pet_xp -= max_xp
-		GameState.pet_level += 1
+
+	if GameState.add_pet_xp(35.0):
 		AudioManager.play("levelup")
 		AudioManager.play("legendary", 0.2)
 		GameState.toast.emit("🐾 Mèo Chiêu Tài đã lên CẤP %d! Mở khóa đặc quyền mới!" % GameState.pet_level)
-		GameState.diamonds += 10
-		GameState.diamonds_changed.emit(GameState.diamonds)
+		GameState.add_diamonds(10)
 	else:
 		GameState.toast.emit("🐾 Meo meo! Mèo cưng rất thích cá tươi (+35 Cảm tình)!")
 		
@@ -176,18 +171,14 @@ func _on_feed() -> void:
 
 func _on_play() -> void:
 	var cost := _get_feed_cost() * 0.5
-	if not GameState.spend_gold(cost):
+	if not GameState.try_spend(cost):
 		return
-		
+
 	AudioManager.play("pop")
-	GameState.pet_xp += 20.0
 	GameState.toast.emit("🧶 Mèo cưng vờn cuộn len! Toàn quán phấn khởi phục vụ nhanh x2 (30s)!")
 	GameState.trigger_rush(10)
-	
-	var max_xp := _get_max_xp(GameState.pet_level)
-	if GameState.pet_xp >= max_xp:
-		GameState.pet_xp -= max_xp
-		GameState.pet_level += 1
+
+	if GameState.add_pet_xp(20.0):
 		AudioManager.play("levelup")
 		GameState.toast.emit("🐾 Mèo Chiêu Tài đã lên CẤP %d!" % GameState.pet_level)
 		

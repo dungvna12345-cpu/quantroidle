@@ -7,6 +7,7 @@ var area: InnArea
 var _state: String = "idle" # idle / walk / sleep
 var _action_timer: float = 3.0
 var _pet_count: int = 0
+var _last_pet_ms: int = -100000
 var _tail_angle: float = 0.0
 var pet_body: Node2D
 var pet_tail: Node2D
@@ -87,6 +88,12 @@ func _pick_new_action() -> void:
 
 ## Khi người chơi chạm vuốt ve mèo
 func pet_interaction() -> void:
+	# hồi chiêu 2 giây cho phần thưởng: trước đây chạm liên tục được vàng không giới hạn
+	var now := Time.get_ticks_msec()
+	if now - _last_pet_ms < 2000:
+		Juice.bounce(self, 1.15)
+		return
+	_last_pet_ms = now
 	_pet_count += 1
 	_state = "idle"
 	_action_timer = 5.0
@@ -103,11 +110,7 @@ func pet_interaction() -> void:
 	var meows := ["Meo meo~ 🐾", "Gừ gừ... sướng quá!", "Meo! Chúc quán phát tài!", "Meo meo nựng thích ghê!"]
 	say(meows[randi() % meows.size()])
 
-	GameState.pet_xp += 25.0
-	var req_xp: float = float(GameState.pet_level * 100)
-	if GameState.pet_xp >= req_xp and GameState.pet_level < 5:
-		GameState.pet_level += 1
-		GameState.pet_xp = 0.0
+	if GameState.add_pet_xp(25.0):
 		AudioManager.play("levelup", 0.15)
 		var perks := [
 			"",
@@ -125,7 +128,7 @@ func pet_interaction() -> void:
 			GameState.show_toast("+%s Vàng từ Mèo Chiêu Tài!" % NumberFormat.fmt(bonus))
 
 	if UIKit.main:
-		UIKit.main.call("sparkle_at", global_position + Vector2(0, -40))
+		UIKit.main.call("sparkle_at_world", global_position + Vector2(0, -40))
 
 
 ## Vẽ mèo tam thể chibi tròn xoe siêu đáng yêu

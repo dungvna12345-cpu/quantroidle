@@ -1,6 +1,6 @@
 extends Node2D
 ## Hệ thống Thời Tiết & Ánh Sáng Tuyệt Đẹp cho Quán Trọ Idle.
-## 3 Chế độ: Nắng Hoa Rơi, Mưa Rào Phố Cổ (Tăng 30% món nóng), Đêm Trăng Đom Đóm Phát Sáng.
+## 3 Chế độ: Nắng Hoa Rơi, Mưa Rào Phố Cổ, Đêm Trăng Đom Đóm Phát Sáng (chỉ là hiệu ứng hình ảnh).
 
 enum WeatherType { PETALS, RAIN, FIREFLIES }
 
@@ -73,7 +73,7 @@ func _setup_weather(w: WeatherType) -> void:
 					"speed": randf_range(450.0, 650.0),
 					"length": randf_range(16.0, 28.0)
 				})
-			GameState.show_toast("🌧️ MƯA RÀO PHỐ CỔ: Thực khách thích ăn món nóng sốt (+30% doanh thu)!")
+			GameState.show_toast("🌧️ MƯA RÀO PHỐ CỔ: Thực khách ghé quán trú mưa thưởng thức món nóng sốt!")
 			AudioManager.play("whoosh")
 		WeatherType.FIREFLIES:
 			for i in 20:

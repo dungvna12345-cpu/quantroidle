@@ -5,6 +5,8 @@ const AUDIO_DIR := "res://assets/audio/"
 const SFX_NAMES: Array[String] = ["coin", "click", "purchase", "levelup", "whoosh", "pop",
 	"sizzle", "chest_open", "card_flip", "legendary", "spin_tick"]
 const POOL_SIZE := 8
+## Tên hiệu ứng được gọi trong code nhưng chưa có file wav -> dùng tạm âm có sẵn.
+const SFX_ALIAS: Dictionary = {"bell": "spin_tick", "celebrate": "legendary"}
 
 var _music: AudioStreamPlayer
 var _pool: Array[AudioStreamPlayer] = []
@@ -100,6 +102,7 @@ func _apply_settings() -> void:
 
 ## Phát hiệu ứng. min_gap: chống phát dồn dập (vd. tiếng xu).
 func play(sfx_name: String, pitch_jitter: float = 0.0, min_gap: float = 0.05) -> void:
+	sfx_name = SFX_ALIAS.get(sfx_name, sfx_name)
 	if _headless or not GameState.settings.get("sfx", true) or not _streams.has(sfx_name):
 		return
 	var now: float = Time.get_ticks_msec() / 1000.0

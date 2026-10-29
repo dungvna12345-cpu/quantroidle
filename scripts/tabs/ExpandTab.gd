@@ -12,20 +12,41 @@ var _wing_title: Label
 var _wing_box: VBoxContainer
 var _wing_cards: Array[UpgradeCard] = []
 var _prestige_title: Label
-var _chapter_cards: Array[UpgradeCard] = []
+var _map: ChapterMap
+var _chapter_card: UpgradeCard
+var _feature_icon: TextureRect
+var _feature_title: Label
+var _feature_desc: Label
+var _sel_chapter: int = 0
 
 
 func _build() -> void:
 	var list := UIKit.tab_sheet(self, "MỞ RỘNG", "Mở khu mới, trang trí, và đưa quán sang thành phố mới")
 	list.add_child(UIKit.section("Hành trình quán (chương)"))
-	for i in GameState.chapters_data.size():
-		var ch: Dictionary = GameState.chapters_data[i]
-		var cc := UpgradeCard.new()
-		cc.setup(Sprites.ui(str(ch["thumb"])), "%d. %s" % [i + 1, str(ch["name"])], 1)
-		cc.icon_rect.custom_minimum_size = Vector2(110, 84)
-		cc.action.connect(_on_chapter.bind(i, cc))
-		list.add_child(cc)
-		_chapter_cards.append(cc)
+	_sel_chapter = GameState.chapter
+	_map = ChapterMap.new()
+	_map.selected.connect(_on_map_selected)
+	list.add_child(_map)
+	_chapter_card = UpgradeCard.new()
+	_chapter_card.setup(Sprites.ui(str(GameState.chapter_info()["thumb"])), "", 1)
+	_chapter_card.icon_rect.custom_minimum_size = Vector2(110, 84)
+	_chapter_card.action.connect(func(_b: int) -> void: _on_chapter(0, _sel_chapter, _chapter_card))
+	list.add_child(_chapter_card)
+	# đặc trưng (cơ chế riêng) của chương đang chọn
+	var fp := UIKit.panel("Highlight")
+	list.add_child(fp)
+	var fh := UIKit.hbox(12)
+	fp.add_child(fh)
+	_feature_icon = UIKit.icon("coin", 72, false)
+	fh.add_child(_feature_icon)
+	var fv := UIKit.vbox(2)
+	fv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fh.add_child(fv)
+	_feature_title = UIKit.label("", "HeaderLabel", 24)
+	fv.add_child(_feature_title)
+	_feature_desc = UIKit.label("", "SmallLabel", 19)
+	_feature_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	fv.add_child(_feature_desc)
 	list.add_child(UIKit.section("Các khu của quán"))
 	for a: Dictionary in GameState.areas_data:
 		var c := UpgradeCard.new()
@@ -59,30 +80,7 @@ func _build() -> void:
 
 func _refresh() -> void:
 	var g := GameState
-	for i in _chapter_cards.size():
-		var ch: Dictionary = g.chapters_data[i]
-		var cc := _chapter_cards[i]
-		var mult := "Thu nhập x%d" % int(ch["income_mult"])
-		if i < g.chapter:
-			cc.dim(true)
-			cc.set_info("", str(ch["desc"]), "Đã hoàn thành • " + mult)
-			cc.set_button(0, "Đã qua", false, "", "check")
-		elif i == g.chapter:
-			cc.dim(false)
-			var need := "Chương cuối" if g.is_last_chapter() else "Mục tiêu %d/3 sao để sang chương sau" % Progress.stars()
-			cc.set_info("", str(ch["desc"]), mult + " • " + need)
-			cc.set_button(0, "Hiện tại", false, "GreenButton", "check")
-		elif i == g.chapter + 1:
-			cc.dim(not g.can_advance_chapter())
-			cc.set_info("", str(ch["desc"]), mult + " • Cần 3 sao mục tiêu chương")
-			if g.can_advance_chapter():
-				cc.set_button(0, "Lên đường", true, "RedButton", "arrow_right", true)
-			else:
-				cc.set_button(0, "%d/3 sao" % Progress.stars(), true, "", "star")
-		else:
-			cc.dim(true)
-			cc.set_info("", str(ch["desc"]), mult + " • Hoàn thành chương trước")
-			cc.set_button(0, "Khóa", false, "", "lock")
+	_refresh_chapter()
 	for i in _area_cards.size():
 		var a: Dictionary = g.areas_data[i]
 		var id: String = a["id"]
@@ -132,6 +130,10 @@ func _refresh() -> void:
 			wc.dim(false)
 			wc.set_info("Đã mở", str(w["desc"]))
 			wc.set_button(0, "Đã mở", false, "GreenButton", "check")
+		elif g.wing_building(g.current_area, wid):
+			wc.dim(false)
+			wc.set_info("", str(w["desc"]), "Đang thi công • còn " + NumberFormat.fmt_time(g.wing_build_left(g.current_area, wid)))
+			wc.set_button(0, "Đang xây", false, "", "clock")
 		elif g.level < int(w["unlock_level"]):
 			wc.dim(true)
 			wc.set_info("", str(w["desc"]), "Cần cấp quán %d" % int(w["unlock_level"]))
@@ -209,6 +211,48 @@ func _on_decor(_idx: int, kind: String, card: UpgradeCard) -> void:
 	_refresh()
 
 
+func _on_map_selected(i: int) -> void:
+	_sel_chapter = i
+	_refresh_chapter()
+
+
+## Thẻ chi tiết + đặc trưng của chương đang chọn trên bản đồ.
+func _refresh_chapter() -> void:
+	var g := GameState
+	var i: int = _sel_chapter
+	var ch: Dictionary = g.chapters_data[i]
+	var cc := _chapter_card
+	cc.icon_rect.texture = Sprites.ui(str(ch["thumb"]))
+	cc.title_label.text = "%d. %s (%s)" % [i + 1, str(ch["name"]), str(ch["city"])]
+	var spec: Dictionary = g.dish_info(str(ch.get("specialty", "")))
+	var mult := "Thu nhập x%s • Đặc sản: %s" % [NumberFormat.fmt_dec(float(ch["income_mult"])), str(spec.get("name", "?"))]
+	if i < g.chapter:
+		cc.dim(true)
+		cc.set_info("", str(ch["desc"]), "Đã hoàn thành • " + mult)
+		cc.set_button(0, "Đã qua", false, "", "check")
+	elif i == g.chapter:
+		cc.dim(false)
+		var need := "Chương cuối" if g.is_last_chapter() else "Mục tiêu %d/3 sao" % Progress.stars()
+		cc.set_info("", str(ch["desc"]), mult + " • " + need)
+		cc.set_button(0, "Hiện tại", false, "GreenButton", "check")
+	elif i == g.chapter + 1:
+		cc.dim(not g.can_advance_chapter())
+		cc.set_info("", str(ch["desc"]), mult + " • Cần 3 sao mục tiêu chương")
+		if g.can_advance_chapter():
+			cc.set_button(0, "Lên đường", true, "RedButton", "arrow_right", true)
+		else:
+			cc.set_button(0, "%d/3 sao" % Progress.stars(), true, "", "star")
+	else:
+		cc.dim(true)
+		cc.set_info("", str(ch["desc"]), mult + " • Hoàn thành chương trước")
+		cc.set_button(0, "Khóa", false, "", "lock")
+	var f: Dictionary = ch.get("feature", {})
+	_feature_icon.texture = Sprites.tex(str(f.get("icon", "star")))
+	_feature_title.text = "Đặc trưng: " + str(f.get("name", ""))
+	_feature_desc.text = str(f.get("desc", ""))
+	_feature_title.add_theme_color_override("font_color", ChapterTheme.color("accent", i))
+
+
 func _on_chapter(_idx: int, i: int, _card: UpgradeCard) -> void:
 	if i != GameState.chapter + 1:
 		return
@@ -219,9 +263,9 @@ func _on_chapter(_idx: int, i: int, _card: UpgradeCard) -> void:
 	var c: PopupBase = ConfirmScene.instantiate()
 	c.title_text = "Sang chương mới"
 	c.set("message", "Chuyển tới %s (%s)?
-Thu nhập x%d. Quán mới bắt đầu lại từ đầu.
+Thu nhập x%s. Quán mới bắt đầu lại từ đầu.
 Giữ kim cương, Danh tiếng (+%d) và thành tích, nhận thêm 20 kim cương." % [
-		str(ch["name"]), str(ch["city"]), int(ch["income_mult"]), GameState.prestige_gain()])
+		str(ch["name"]), str(ch["city"]), NumberFormat.fmt_dec(float(ch["income_mult"])), GameState.prestige_gain()])
 	c.set("yes_text", "Lên đường!")
 	c.connect("answered", _on_chapter_answer)
 	UIKit.main.call("open_popup", c)

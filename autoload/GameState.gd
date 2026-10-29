@@ -24,6 +24,7 @@ signal wing_opened(area_id: String, wing_id: String)
 signal combo_hit(count: int, world_pos: Vector2)
 signal fever_started(duration: float)
 signal fever_ended
+signal chapter_feature_changed(active: bool)   # cơ chế riêng của chương bật / tắt (sương lạnh...)
 
 var fever_time: float = 0.0
 
@@ -81,6 +82,7 @@ var tips_collected: int = 0
 var orders: Array = []             # đơn đặt tiệc: {"theme", "dish", "need", "have"}
 var pet_level: int = 1
 var pet_xp: float = 0.0
+var last_summary: Dictionary = {}  # tổng kết chương vừa xong (hiện ở popup chương mới)
 
 # ---------- Sự kiện ngẫu nhiên (không lưu) ----------
 var current_event: Dictionary = {}
@@ -172,7 +174,10 @@ func new_game(keep_meta: bool = false) -> void:
 	manager = false
 	offline_hours = int(bal("offline_base_hours", 2))
 	current_area = "hall"
-	boost_until = 0.0
+	# x2 đã mua bằng kim cương vẫn giữ khi sang chương / tái khởi nghiệp
+	if not keep_meta:
+		boost_until = 0.0
+	fever_time = 0.0
 	measured_rate = 0.0
 	pending_offline = 0.0
 	pending_offline_seconds = 0.0
@@ -197,8 +202,17 @@ func new_game(keep_meta: bool = false) -> void:
 		daily = {}
 		settings = {"music": true, "sfx": true, "vibrate": true}
 		tutorial_done = false
+		tutorial2_done = false
+		just_advanced = false
 		upgrades_bought = 0
 		tips_collected = 0
+		pet_level = 1
+		pet_xp = 0.0
+		guest_claimed = {}
+		owner_name = "Quán Trọ"
+		avatar = "avatar"
+		last_summary = {}
+	_reset_feature()
 	_check_daily_reset()
 	orders = []
 	_fill_orders()
@@ -242,6 +256,7 @@ func to_dict() -> Dictionary:
 		"upgrades_bought": upgrades_bought, "tips_collected": tips_collected,
 		"orders": orders, "chapter": chapter, "just_advanced": just_advanced,
 		"pet_level": pet_level, "pet_xp": pet_xp, "guest_claimed": guest_claimed,
+		"last_summary": last_summary,
 	}
 
 
@@ -267,6 +282,8 @@ func from_dict(d: Dictionary) -> void:
 	pet_xp = float(d.get("pet_xp", 0.0))
 	var gc: Variant = d.get("guest_claimed", {})
 	guest_claimed = Dictionary(gc) if gc is Dictionary else {}
+	var ls: Variant = d.get("last_summary", {})
+	last_summary = Dictionary(ls) if ls is Dictionary else {}
 	manager = bool(d.get("manager", false))
 	offline_hours = clampi(int(d.get("offline_hours", offline_hours)), 1, int(bal("offline_max_hours", 12)))
 	boost_until = float(d.get("boost_until", 0.0))
@@ -312,8 +329,8 @@ func from_dict(d: Dictionary) -> void:
 		for o: Variant in od:
 			if o is Dictionary and dish_levels.has(str(o.get("dish", ""))):
 				orders.append({"theme": str(o.get("theme", "")), "dish": str(o["dish"]),
-					"need": int(o.get("need", 5)), "have": int(o.get("have", 0))})
-		_fill_orders()
+					"need": int(o.get("need", 5)), "have": int(o.get("have", 0)), "royal": bool(o.get("royal", false))})
+	_fill_orders()
 	# đảm bảo món đủ cấp đều đã mở (khi data thay đổi giữa các phiên bản)
 	for dd: Dictionary in dishes:
 		if int(dd["unlock_level"]) <= level and int(dish_levels[dd["id"]]) == 0:
@@ -363,6 +380,7 @@ func _process(delta: float) -> void:
 				total += v
 			measured_rate = total / (_rate_buckets.size() * 5.0)
 	_update_event(delta)
+	_update_feature(delta)
 	if fever_time > 0.0:
 		fever_time -= delta
 		if fever_time <= 0.0:
@@ -422,7 +440,7 @@ func estimate_rate() -> float:
 					tables += 1
 			var cap: float = minf(tables, 1.0 + staff_count("waiter") * 1.6)
 			total += cap * bal("fallback_rate_per_table") * avg_price * float(a["price_mult"]) / 10.0
-	return total * income_mult()
+	return total * base_income_mult()
 
 
 func _track_rate(v: float) -> void:
@@ -465,14 +483,25 @@ func area_index(id: String) -> int:
 
 
 func income_mult() -> float:
+	return base_income_mult() * temp_income_mult()
+
+
+## Hệ số lâu dài (danh tiếng, chương, nghiên cứu, thẻ, mèo).
+func base_income_mult() -> float:
 	var m: float = (1.0 + bal("prestige_bonus", 0.1) * reputation) * float(chapter_info().get("income_mult", 1))
 	m *= 1.0 + Progress.bonus("income")
+	if pet_level >= 5:
+		m *= 1.15
+	return m
+
+
+## Hệ số tạm thời (x2 mua, giờ vàng x3): không tính vào tốc độ đo, offline và phần thưởng theo phút.
+func temp_income_mult() -> float:
+	var m: float = 1.0
 	if boost_active():
 		m *= 2.0
 	if is_fever():
 		m *= 3.0
-	if pet_level >= 5:
-		m *= 1.15
 	return m
 
 
@@ -528,6 +557,10 @@ func random_dish() -> String:
 	var list := unlocked_dishes()
 	if list.is_empty():
 		return dishes[0]["id"]
+	# Phở sáng Hà Thành: buổi sáng khách gọi đặc sản nhiều hơn
+	if feature_id() == "morning_rush" and feature_active() and list.has(specialty()) \
+			and randf() < float(chapter_feature().get("specialty_chance", 0.6)):
+		return specialty()
 	# món đặc biệt hôm nay được gọi nhiều hơn
 	if randf() < bal("special_order_chance", 0.3):
 		return daily_special()
@@ -549,7 +582,7 @@ func dish_sell_price(id: String) -> float:
 		p *= bal("special_mult", 2.0)
 	if id == specialty():
 		p *= float(chapter_info().get("specialty_mult", 1.5))
-	return p * event_price_mult()
+	return p * event_price_mult() * feature_price_mult(id)
 
 
 ## Thời gian nấu thực tế tại một khu (món đắt nấu lâu hơn, bếp và đầu bếp giỏi nấu nhanh hơn).
@@ -752,6 +785,8 @@ func spawn_interval(area_id: String) -> float:
 		bonus += float(staff_data["receptionist"]["spawn_bonus"]) * rc * staff_speed("receptionist")
 	if is_evening():
 		bonus += bal("evening_spawn_bonus", 0.25)
+	if feature_id() == "lantern_night" and feature_active():
+		bonus += float(chapter_feature().get("spawn_bonus", 0.3))
 	var iv: float = maxf(bal("min_spawn_interval", 0.5), bal("base_spawn_interval", 3.0) / (1.0 + bonus))
 	if is_fever():
 		iv /= 2.5
@@ -762,6 +797,8 @@ func patience() -> float:
 	var p: float = bal("patience", 30)
 	if staff_count("receptionist") > 0:
 		p *= 1.0 + float(staff_data["receptionist"]["patience_bonus"])
+	if feature_id() == "cold_snap" and feature_active():
+		p *= 1.0 + float(chapter_feature().get("patience_bonus", 0.5))
 	return p * (1.0 + Progress.bonus("patience"))
 
 
@@ -775,8 +812,12 @@ func area_unlocked(id: String) -> bool:
 
 ## Cộng vàng do kinh doanh (áp dụng hệ số thu nhập). Trả về số vàng thực nhận.
 func earn(amount: float, world_pos: Vector2 = Vector2.ZERO, show_fx: bool = true) -> float:
-	var v: float = amount * income_mult()
-	add_gold(v, true)
+	var temp := temp_income_mult()
+	var v: float = amount * base_income_mult() * temp
+	add_gold(v)
+	add_daily("earn", v)
+	# đo tốc độ không kèm x2 / giờ vàng, để offline và phần thưởng theo phút không bị nhân lên
+	_track_rate(v / temp)
 	if show_fx:
 		coin_fx.emit(world_pos, v)
 	return v
@@ -818,6 +859,37 @@ func try_spend_diamonds(n: int) -> bool:
 	diamonds -= n
 	diamonds_changed.emit(diamonds)
 	return true
+
+
+## Cảm tình cần để mèo lên cấp kế tiếp.
+func pet_xp_needed(lv: int) -> float:
+	return 100.0 * float(lv)
+
+
+## Cộng cảm tình cho mèo (tối đa cấp 5). Trả về true nếu vừa lên cấp.
+func add_pet_xp(v: float) -> bool:
+	if pet_level >= 5:
+		pet_xp = 0.0
+		return false
+	pet_xp += v
+	if pet_xp < pet_xp_needed(pet_level):
+		return false
+	pet_xp -= pet_xp_needed(pet_level)
+	pet_level += 1
+	if pet_level >= 5:
+		pet_xp = 0.0
+	return true
+
+
+## Bật / cộng dồn thu nhập x2 trong `seconds` giây.
+func activate_boost(seconds: float) -> void:
+	boost_until = maxf(Time.get_unix_time_from_system(), boost_until) + seconds
+	state_changed.emit()
+
+
+## Gọi một đợt khách kéo đến (cửa hàng, mèo, nhà phê bình...).
+func trigger_rush(count: int) -> void:
+	rush_requested.emit(count)
 
 
 func add_xp(v: float) -> void:
@@ -1050,11 +1122,8 @@ func set_setting(key: String, value: bool) -> void:
 func compute_offline(seconds: float) -> float:
 	var t: float = minf(seconds, offline_cap_hours() * 3600.0)
 	var factor: float = 1.0 if manager else bal("offline_rate_no_manager", 0.4)
-	# x2 đã hết hạn thì không tính vào tốc độ offline
-	var rate: float = income_rate()
-	if not boost_active() and measured_rate > 0.0 and boost_until > 0.0:
-		rate = minf(rate, measured_rate)
-	return floor(rate * t * factor)
+	# income_rate() không gồm x2 / giờ vàng nên x2 đã hết hạn không làm offline tăng gấp đôi
+	return floor(income_rate() * t * factor)
 
 
 ## Giờ offline tối đa, tính cả nghiên cứu "Két sắt lớn".
@@ -1311,6 +1380,23 @@ func _fill_orders() -> void:
 	var slots: int = int(orders_data.get("slots", 3))
 	while orders.size() < slots:
 		orders.append(_new_order())
+	# Huế: luôn có một đơn Ngự yến
+	if feature_id() == "royal_banquet" and not orders.is_empty():
+		var has_royal := false
+		for o: Dictionary in orders:
+			if bool(o.get("royal", false)):
+				has_royal = true
+		if not has_royal:
+			orders[0] = _make_royal(orders[0])
+
+
+func _make_royal(o: Dictionary) -> Dictionary:
+	var f := chapter_feature()
+	o["royal"] = true
+	o["theme"] = "Ngự yến"
+	o["need"] = int(ceil(float(o["need"]) * float(f.get("need_mult", 2.0))))
+	o["have"] = 0
+	return o
 
 
 func _new_order() -> Dictionary:
@@ -1345,6 +1431,18 @@ func order_reward_gold() -> float:
 			* (1.0 + Progress.bonus("order")))
 
 
+## Thưởng vàng của một đơn cụ thể (đơn Ngự yến được nhân thêm).
+func order_reward_for(i: int) -> float:
+	var g := order_reward_gold()
+	if i >= 0 and i < orders.size() and bool((orders[i] as Dictionary).get("royal", false)):
+		g = floor(g * float(chapter_feature().get("reward_mult", 4.0)))
+	return g
+
+
+func order_is_royal(i: int) -> bool:
+	return i >= 0 and i < orders.size() and bool((orders[i] as Dictionary).get("royal", false))
+
+
 func order_ready(i: int) -> bool:
 	var o: Dictionary = orders[i]
 	return int(o["have"]) >= int(o["need"])
@@ -1353,10 +1451,18 @@ func order_ready(i: int) -> bool:
 func claim_order(i: int) -> bool:
 	if i < 0 or i >= orders.size() or not order_ready(i):
 		return false
-	add_gold(order_reward_gold(), true)
+	# không tính vào tốc độ đo: thưởng = 4 phút thu nhập, nếu tính sẽ thổi phồng tốc độ rồi thưởng sau lại lớn hơn
+	var g := order_reward_for(i)
+	add_gold(g)
+	add_daily("earn", g)
 	add_diamonds(randi_range(int(orders_data.get("diamonds_min", 1)), int(orders_data.get("diamonds_max", 3))))
+	var royal := order_is_royal(i)
+	if royal:
+		add_diamonds(int(chapter_feature().get("bonus_diamonds", 5)))
+		toast.emit("👑 Ngự yến thành công! Hoàng gia ban thưởng hậu hĩnh!")
 	add_daily("order", 1)
-	orders[i] = _new_order()
+	# đơn Ngự yến xong thì ngay chỗ đó mở đơn Ngự yến mới (không đụng tiến độ các đơn khác)
+	orders[i] = _make_royal(_new_order()) if royal else _new_order()
 	orders_changed.emit()
 	purchased.emit("order")
 	return true
@@ -1365,7 +1471,10 @@ func claim_order(i: int) -> bool:
 func skip_order(i: int) -> bool:
 	if not try_spend_diamonds(int(orders_data.get("skip_diamonds", 3))):
 		return false
+	var royal := order_is_royal(i)
 	orders[i] = _new_order()
+	if royal:
+		orders[i] = _make_royal(orders[i])
 	orders_changed.emit()
 	return true
 
@@ -1407,7 +1516,10 @@ func advance_chapter() -> bool:
 	if not can_advance_chapter():
 		return false
 	var keep_diamonds := diamonds
-	reputation += prestige_gain()
+	var gain := prestige_gain()
+	last_summary = {"chapter": chapter, "customers": run_customers, "gold": run_gold, "level": level,
+		"stars": Progress.stars(), "reputation": gain}
+	reputation += gain
 	chapter += 1
 	new_game(true)
 	diamonds = keep_diamonds + 20
@@ -1423,6 +1535,123 @@ func advance_chapter() -> bool:
 ## Món đặc sản của chương hiện tại (bán giá cao hơn).
 func specialty() -> String:
 	return str(chapter_info().get("specialty", ""))
+
+
+# =====================================================================
+# Cơ chế riêng của chương (data/chapters.json -> "feature")
+#   morning_rush  Hà Nội: buổi sáng khách gọi đặc sản, đặc sản x2
+#   lantern_night Hội An: buổi tối giá món + khách đến nhanh hơn
+#   delivery      Sài Gòn: shipper ghé cổng, chạm để nhận tiền giao hàng (InnArea + Shipper.gd)
+#   cold_snap     Đà Lạt: sương lạnh định kỳ, món nóng x2, khách kiên nhẫn hơn
+#   royal_banquet Huế: luôn có một đơn Ngự yến thưởng lớn
+# =====================================================================
+
+var _feature_wait: float = 0.0
+var _feature_left: float = 0.0
+var _feature_was_active: bool = false
+
+
+func chapter_feature() -> Dictionary:
+	return chapter_info().get("feature", {})
+
+
+func feature_id() -> String:
+	return str(chapter_feature().get("id", ""))
+
+
+## Cơ chế chương đang có hiệu lực ngay lúc này không.
+func feature_active() -> bool:
+	var f := chapter_feature()
+	match str(f.get("id", "")):
+		"morning_rush":
+			return day_phase() < float(f.get("until_phase", 0.3))
+		"lantern_night":
+			return day_phase() >= float(f.get("from_phase", 0.62))
+		"cold_snap":
+			return _feature_left > 0.0
+		"delivery", "royal_banquet":
+			return true
+	return false
+
+
+## Số giây còn lại của đợt sương lạnh (0 nếu không có).
+func feature_left() -> float:
+	return _feature_left
+
+
+## Hệ số giá theo cơ chế chương cho một món.
+func feature_price_mult(dish_id: String) -> float:
+	var f := chapter_feature()
+	match str(f.get("id", "")):
+		"morning_rush":
+			if dish_id == specialty() and feature_active():
+				# thay hệ số đặc sản thường (x1.5) bằng hệ số buổi sáng (x2)
+				return float(f.get("specialty_mult", 2.0)) / maxf(0.01, float(chapter_info().get("specialty_mult", 1.5)))
+		"lantern_night":
+			if feature_active():
+				return float(f.get("price_mult", 1.4))
+		"cold_snap":
+			if feature_active() and (f.get("hot_dishes", []) as Array).has(dish_id):
+				return float(f.get("price_mult", 2.0))
+	return 1.0
+
+
+## Dòng trạng thái ngắn cho banner khi cơ chế chương đang chạy ("" nếu không).
+func feature_status() -> String:
+	if not feature_active():
+		return ""
+	var f := chapter_feature()
+	match str(f.get("id", "")):
+		"morning_rush":
+			return "🍜 PHỞ SÁNG: ĐẶC SẢN x%s" % NumberFormat.fmt_dec(float(f.get("specialty_mult", 2.0)))
+		"lantern_night":
+			return "🏮 ĐÊM HỘI ĐÈN LỒNG: GIÁ +%d%%" % int(round((float(f.get("price_mult", 1.4)) - 1.0) * 100.0))
+		"cold_snap":
+			return "❄️ SƯƠNG LẠNH: MÓN NÓNG x%s (%ds)" % [NumberFormat.fmt_dec(float(f.get("price_mult", 2.0))), int(ceil(_feature_left))]
+	return ""
+
+
+func _reset_feature() -> void:
+	_feature_left = 0.0
+	_feature_was_active = false
+	var iv: Array = chapter_feature().get("interval", [70, 110])
+	_feature_wait = randf_range(float(iv[0]), float(iv[1])) * 0.5
+
+
+func _update_feature(delta: float) -> void:
+	var f := chapter_feature()
+	if str(f.get("id", "")) == "cold_snap":
+		if _feature_left > 0.0:
+			_feature_left = maxf(0.0, _feature_left - delta)
+			if _feature_left <= 0.0:
+				var iv: Array = f.get("interval", [70, 110])
+				_feature_wait = randf_range(float(iv[0]), float(iv[1]))
+		else:
+			_feature_wait -= delta
+			if _feature_wait <= 0.0:
+				_feature_left = float(f.get("duration", 60))
+	var active := feature_active() and str(f.get("id", "")) in ["morning_rush", "lantern_night", "cold_snap"]
+	if active != _feature_was_active:
+		_feature_was_active = active
+		chapter_feature_changed.emit(active)
+		if active:
+			toast.emit("✨ %s bắt đầu!" % str(f.get("name", "")))
+
+
+## Sài Gòn: tiền nhận được khi chạm shipper.
+func delivery_reward() -> float:
+	var f := chapter_feature()
+	return floor(maxf(100.0 * cost_mult(), income_rate() * float(f.get("seconds", 45))))
+
+
+func claim_delivery() -> float:
+	var g := delivery_reward()
+	add_gold(g)
+	add_daily("earn", g)
+	if randf() < float(chapter_feature().get("diamond_chance", 0.1)):
+		add_diamonds(1)
+		toast.emit("🛵 Khách boa shipper 1 kim cương!")
+	return g
 
 
 ## Phát hiện đồng hồ bị chỉnh lùi: không cho nhận quà theo ngày / offline từ thời gian giả.

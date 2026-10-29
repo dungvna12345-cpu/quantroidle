@@ -42,7 +42,13 @@ func interact() -> void:
 	tw.tween_property(self, "scale", Vector2.ONE, 0.15)
 	tw.tween_callback(func():
 		tapped.emit()
+		# đi tiếp ra khỏi đường để `arrived` giải phóng node, Thần Tài mới mới xuất hiện lại được
+		moving = path.size() > 0
 	)
+
+
+func is_active() -> bool:
+	return _active
 
 func _process(delta: float) -> void:
 	super(delta)

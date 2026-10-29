@@ -13,8 +13,8 @@ func fmt(n: float) -> String:
 		return str(int(floor(n)))
 	var tier: int = int(floor(log(n) / log(1000.0)))
 	var scaled: float = n / pow(1000.0, tier)
-	# làm tròn có thể đẩy 999.96 thành 1000.0
-	if scaled >= 999.95:
+	# hiển thị dùng floor nên không bao giờ làm tròn lên; chỉ cần sửa sai số log() ở đúng mốc 1000^k
+	if scaled >= 1000.0:
 		scaled /= 1000.0
 		tier += 1
 	var text: String

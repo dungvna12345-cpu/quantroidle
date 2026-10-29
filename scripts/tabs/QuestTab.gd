@@ -122,7 +122,9 @@ func _refresh() -> void:
 		sb.set_content_margin_all(4)
 		sb.set_border_width_all(3)
 		var claimed_today: bool = not can and i == (idx + 6) % 7
-		if i < idx or claimed_today:
+		# vừa nhận ngày 7 thì idx quay về 0: cả tuần đều đã nhận
+		var week_done: bool = not can and idx == 0 and int(g.login.get("day", 0)) > 0
+		if i < idx or claimed_today or week_done:
 			sb.bg_color = Color("d8f0c8")
 			sb.border_color = Color("7bd35b")
 		elif i == idx and can:

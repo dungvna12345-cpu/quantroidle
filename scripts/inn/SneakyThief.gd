@@ -21,6 +21,7 @@ func _init() -> void:
 	add_child(body_draw)
 	body_draw.draw.connect(_draw_thief)
 	body.visible = false # ẩn walker sprite mặc định
+	arrived.connect(_on_arrived)
 
 
 func setup(a: InnArea, start_grid: Vector2, target_grid: Vector2) -> void:
@@ -57,7 +58,7 @@ func hit() -> bool:
 	var drop_gold := maxf(50.0, GameState.income_rate() * 5.0)
 	GameState.add_gold(drop_gold)
 	if UIKit.main:
-		UIKit.main.call("sparkle_at", global_position + Vector2(0, -30))
+		UIKit.main.call("sparkle_at_world", global_position + Vector2(0, -30))
 
 	if hp > 0:
 		var squeaks := ["Chít chít! Bị lộ rồi!", "Đừng đuổi theo tôi!", "Bao vàng của tôiii! 😱", "Chạy đằng trời!"]
@@ -82,7 +83,7 @@ func _defeat() -> void:
 
 	if UIKit.main:
 		for i in 8:
-			UIKit.main.call("sparkle_at", global_position + Vector2(randf_range(-40, 40), randf_range(-60, 10)))
+			UIKit.main.call("sparkle_at_world", global_position + Vector2(randf_range(-40, 40), randf_range(-60, 10)))
 
 	var dt := create_tween()
 	dt.tween_property(self, "scale", Vector2(1.3, 1.3), 0.15)

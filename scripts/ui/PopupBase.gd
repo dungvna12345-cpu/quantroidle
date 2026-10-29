@@ -117,6 +117,9 @@ func close() -> void:
 
 
 func _finish() -> void:
+	# đổi tên trước khi báo đóng: popup kế tiếp mở trong handler `closed` sẽ giữ được đúng tên
+	# (Main._has_popup tìm popup theo tên) thay vì bị Godot đặt tên tự sinh vì trùng tên
+	name = "Closed_%d" % get_instance_id()
 	closed.emit()
 	queue_free()
 

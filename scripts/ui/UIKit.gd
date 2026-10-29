@@ -121,7 +121,7 @@ static func tab_sheet(parent: Control, title: String, subtitle: String = "") -> 
 
 static func section(text: String) -> Label:
 	var l := label(text, "", 28)
-	l.add_theme_color_override("font_color", Color("d06a52"))
+	l.add_theme_color_override("font_color", ChapterTheme.accent())
 	return l
 
 

@@ -64,8 +64,17 @@ func _refresh() -> void:
 		var r: Dictionary = _rows[i]
 		var d: Dictionary = g.dish_info(str(o["dish"]))
 		(r["icon"] as TextureRect).texture = Sprites.tex("dish_" + str(o["dish"]))
-		(r["title"] as Label).text = "%s: %d phần %s" % [str(o["theme"]), int(o["need"]), str(d["name"])]
-		(r["sub"] as Label).text = "Thưởng: %s vàng + kim cương" % NumberFormat.fmt(g.order_reward_gold())
+		var royal := g.order_is_royal(i)
+		var title: Label = r["title"]
+		title.text = ("👑 " if royal else "") + "%s: %d phần %s" % [str(o["theme"]), int(o["need"]), str(d["name"])]
+		if royal:
+			title.add_theme_color_override("font_color", ChapterTheme.accent())
+			(r["sub"] as Label).text = "Thưởng: %s vàng + %d kim cương hoàng gia" % [
+				NumberFormat.fmt(g.order_reward_for(i)), int(g.chapter_feature().get("bonus_diamonds", 5))]
+		else:
+			title.remove_theme_color_override("font_color")
+			(r["sub"] as Label).text = "Thưởng: %s vàng + kim cương" % NumberFormat.fmt(g.order_reward_for(i))
+		(r["card"] as PanelContainer).theme_type_variation = "Highlight" if royal else "Card"
 		var bar: ProgressBar = r["bar"]
 		bar.max_value = float(o["need"])
 		bar.value = float(o["have"])
