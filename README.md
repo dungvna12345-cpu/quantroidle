@@ -27,6 +27,15 @@ Trên điện thoại: kéo một ngón để di chuyển, chụm hai ngón đ�
 - Thu nhập offline tính theo tốc độ thu nhập đo thực tế. Mặc định tối đa 2 giờ, nâng được lên 12 giờ.
   Chưa có Quản lý thì nhận 40%, có Quản lý thì nhận 100%.
 - **5 chương**: Phố Cổ Hà Nội (x1), Hội An (x4), Sài Gòn (x16), Đà Lạt (x64), Cố Đô Huế (x256).
+- **Mỗi chương có đặc trưng riêng** (khai báo ở `data/chapters.json` -> `feature`):
+  - Hà Nội, *Phở sáng*: buổi sáng khách gọi đặc sản nhiều hơn, đặc sản bán x2.
+  - Hội An, *Đêm hội đèn lồng*: buổi tối giá món +40%, khách đến nhanh hơn.
+  - Sài Gòn, *Shipper giao đồ ăn*: shipper ghé cổng, chạm trước khi đi để nhận tiền giao hàng.
+  - Đà Lạt, *Sương lạnh*: định kỳ 60 giây món nóng x2, khách kiên nhẫn hơn.
+  - Huế, *Ngự yến*: luôn có một đơn tiệc Ngự yến thưởng x4 vàng và thêm kim cương.
+- **Giao diện theo chương**: màu tiêu đề popup, khung nổi bật, banner trạng thái đổi theo bảng màu thành phố (`ui`),
+  cảnh quán có không khí riêng (`ambience`): lá vàng, đèn lồng, neon, sương, mai vàng.
+- **Bản đồ hành trình** ở tab Mở rộng: chạm từng chặng để xem chi tiết. Sang chương mới có màn tổng kết chương cũ.
 - **Mục tiêu chương**: mỗi chương có 6 mục tiêu (nút sổ ở thanh trên, hoặc dãy sao dưới tên khu).
   Cứ 2 mục tiêu được 1 sao, mỗi sao mở một rương. Đủ 3 sao thì vào tab Mở rộng, chọn "Lên đường" để sang chương mới.
 - **Cây nghiên cứu** (bình tím ở cột phải): dùng Sách nghiên cứu mở 9 nâng cấp vĩnh viễn, chia 3 tầng.
