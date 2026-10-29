@@ -65,6 +65,9 @@ func _build() -> void:
 	pv.add_child(_name_label)
 
 	_rate_label = UIKit.label("", "SmallLabel", 14)
+	_rate_label.add_theme_color_override("font_color", Color("fde68a"))
+	_rate_label.add_theme_color_override("font_outline_color", Color("1d0d06"))
+	_rate_label.add_theme_constant_override("outline_size", 3)
 	_rate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pv.add_child(_rate_label)
 
@@ -124,24 +127,26 @@ func _build() -> void:
 		_named[k] = act_btn
 
 	# Thẻ món đặc biệt thu nhỏ bên dưới nút Phúc Lợi
-	var dish_card := UIKit.panel("Card")
+	var dish_card := UIKit.panel("CounterBar")
 	dish_card.position = Vector2(14, 96)
-	dish_card.size = Vector2(144, 50)
-	dish_card.custom_minimum_size = Vector2(144, 50)
+	dish_card.size = Vector2(144, 46)
+	dish_card.custom_minimum_size = Vector2(144, 46)
 	add_child(dish_card)
 	var dch := UIKit.hbox(6)
 	dch.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dch.alignment = BoxContainer.ALIGNMENT_CENTER
 	dish_card.add_child(dch)
-	dch.add_child(UIKit.icon("icon_plate", 30))
+	dch.add_child(UIKit.icon("icon_plate", 26))
 	var dcv := UIKit.vbox(-6)
 	dcv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dch.add_child(dcv)
-	_dish_count = UIKit.label("0 MÓN", "SideLabel", 13)
+	_dish_count = UIKit.label("0 MÓN", "ResourceLabel", 13)
+	_dish_count.add_theme_color_override("font_color", Color("fef3c7"))
 	dcv.add_child(_dish_count)
 	_special_label = UIKit.label("", "SmallLabel", 11)
 	_special_label.clip_text = true
 	_special_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_special_label.add_theme_color_override("font_color", Color("fde68a"))
 	dcv.add_child(_special_label)
 	var dish_click := UIKit.button("", "IconButton", "")
 	dish_click.set_anchors_preset(Control.PRESET_FULL_RECT)

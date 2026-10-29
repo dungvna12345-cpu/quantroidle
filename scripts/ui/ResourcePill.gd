@@ -26,7 +26,13 @@ func _ready() -> void:
 	bar.offset_bottom = -6
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bar)
-	value_label = UIKit.label("0", "ResourceLabel", 26)
+	value_label = UIKit.label("0", "ResourceLabel", 24)
+	if icon_id == "diamond":
+		value_label.add_theme_color_override("font_color", Color("bae6fd"))
+		value_label.add_theme_color_override("font_outline_color", Color("082f49"))
+	else:
+		value_label.add_theme_color_override("font_color", Color("fef3c7"))
+		value_label.add_theme_color_override("font_outline_color", Color("1a0802"))
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	bar.add_child(value_label)

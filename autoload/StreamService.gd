@@ -64,10 +64,12 @@ func _read_inputs(peer: StreamPeerTCP) -> void:
 		if not vp:
 			continue
 			
+		var v_size := vp.get_visible_rect().size
+		var v_pos := Vector2(x * v_size.x, y * v_size.y)
+		
 		var win := get_window()
 		var win_size: Vector2 = Vector2(win.size) if win else Vector2(450, 800)
 		var win_pos := Vector2(x * win_size.x, y * win_size.y)
-		print("[StreamService] Chạm: type=", event_type, " norm=(", x, ",", y, ") -> win_pos=", win_pos, " (win_size=", win_size, ")")
 		
 		if event_type == 1: # DOWN
 			var mev := InputEventMouseButton.new()
@@ -104,8 +106,8 @@ func _read_inputs(peer: StreamPeerTCP) -> void:
 			
 			var dev := InputEventScreenDrag.new()
 			dev.index = 0
-			dev.position = win_pos
-			Input.parse_input_event(dev)
+			dev.position = v_pos
+			vp.push_input(dev)
 
 func _broadcast_frame() -> void:
 	var vp := get_viewport()

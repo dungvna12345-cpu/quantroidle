@@ -383,22 +383,34 @@ func _build_nav_card(icon_id: String, text: String, on_click: Callable) -> Juicy
 func _style_nav_card(b: Button, sel: bool) -> void:
 	if b == null:
 		return
-	var tex_id := "nav_card_sel" if sel else "nav_card"
-	for st_name in ["normal", "hover", "pressed", "disabled"]:
-		var st := StyleBoxTexture.new()
-		st.texture = Sprites.ui(tex_id)
+	if sel:
+		var st := StyleBoxFlat.new()
+		st.bg_color = Color("991b1b")
+		st.border_color = Color("f59e0b")
+		st.set_border_width_all(2)
+		st.border_width_bottom = 5
+		st.set_corner_radius_all(18)
+		st.shadow_color = Color(0.96, 0.62, 0.04, 0.35)
+		st.shadow_size = 6
+		st.shadow_offset = Vector2(0, 1)
 		st.content_margin_top = 6.0
 		st.content_margin_bottom = 6.0
-		st.content_margin_left = 4.0
-		st.content_margin_right = 4.0
-		b.add_theme_stylebox_override(st_name, st)
+		st.content_margin_left = 6.0
+		st.content_margin_right = 6.0
+		for st_name in ["normal", "hover", "pressed", "disabled"]:
+			b.add_theme_stylebox_override(st_name, st)
+	else:
+		for st_name in ["normal", "hover", "pressed", "disabled"]:
+			b.add_theme_stylebox_override(st_name, StyleBoxEmpty.new())
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	var lb: Label = b.find_child("Label", true, false)
 	if lb:
-		lb.add_theme_color_override("font_color", Color("c0392b") if sel else Color("4a2810"))
+		lb.add_theme_color_override("font_color", Color("fffdf0") if sel else Color("e0cdb6"))
+		lb.add_theme_color_override("font_outline_color", Color("450a0a") if sel else Color("140702"))
+		lb.add_theme_constant_override("outline_size", 5 if sel else 3)
 	var ic: TextureRect = b.find_child("Icon", true, false)
 	if ic:
-		ic.modulate = Color(1.0, 1.0, 1.0) if sel else Color(0.85, 0.80, 0.75)
+		ic.modulate = Color(1.0, 1.0, 1.0) if sel else Color(0.88, 0.82, 0.76)
 
 
 func _style_nav_center(b: Button) -> void:

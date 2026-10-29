@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Sinh theme/main_theme.tres (font Baloo 2 đậm, nút nổi khối, thẻ bo góc có bóng)."""
+"""
+Sinh theme/main_theme.tres cho Quán Trọ Idle.
+Phong cách: Cổ trấn Đông Dương, mộc ấm, ngà gấm, sơn mài chu sa và vàng kim.
+Loại bỏ hoàn toàn các khối trắng bệt (flat white boxes) gây cảm giác chắp vá/web app.
+"""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -45,18 +49,18 @@ def empty():
 
 
 def button(prefix, bg, edge, text, outline=None):
-    """Nút nổi khối: viền dưới dày và đậm hơn, nhấn xuống thì viền dưới mỏng lại."""
-    props.append('%s/styles/normal = %s' % (prefix, sb(bg, 22, edge, (3, 3, 3, 9), (16, 8, 16, 12))))
-    props.append('%s/styles/hover = %s' % (prefix, sb(lighten(bg), 22, edge, (3, 3, 3, 9), (16, 8, 16, 12))))
-    props.append('%s/styles/pressed = %s' % (prefix, sb(darken(bg), 22, edge, (3, 6, 3, 4), (16, 13, 16, 7))))
-    props.append('%s/styles/disabled = %s' % (prefix, sb("#e6dfd6", 22, "#c4b9ab", (3, 3, 3, 9), (16, 8, 16, 12))))
+    """Nút nổi khối 3D: viền dưới đậm hơn, bấm xuống thì lún nhẹ."""
+    props.append('%s/styles/normal = %s' % (prefix, sb(bg, 20, edge, (2, 2, 2, 6), (16, 8, 16, 11), shadow=(0.20, 6, 2))))
+    props.append('%s/styles/hover = %s' % (prefix, sb(lighten(bg, 0.12), 20, edge, (2, 2, 2, 6), (16, 8, 16, 11), shadow=(0.28, 8, 3))))
+    props.append('%s/styles/pressed = %s' % (prefix, sb(darken(bg, 0.12), 20, edge, (2, 5, 2, 3), (16, 11, 16, 8))))
+    props.append('%s/styles/disabled = %s' % (prefix, sb("#d6cbbd", 20, "#b3a593", (2, 2, 2, 5), (16, 8, 16, 11))))
     props.append('%s/styles/focus = %s' % (prefix, empty()))
     for k in ("font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"):
         props.append('%s/colors/%s = %s' % (prefix, k, col(text)))
-    props.append('%s/colors/font_disabled_color = %s' % (prefix, col("#8f8577")))
+    props.append('%s/colors/font_disabled_color = %s' % (prefix, col("#8a7c6a")))
     if outline:
         props.append('%s/colors/font_outline_color = %s' % (prefix, col(outline)))
-        props.append('%s/constants/outline_size = 7' % prefix)
+        props.append('%s/constants/outline_size = 6' % prefix)
     props.append('%s/constants/icon_max_width = 34' % prefix)
     props.append('%s/constants/h_separation = 6' % prefix)
 
@@ -73,160 +77,185 @@ def darken(h, t=0.1):
     return "#" + "".join("%02x" % int(c * (1 - t)) for c in v)
 
 
-# ---- mặc định
+# ---- Font mặc định
 props.append('default_font = SubResource("FontVariation_bold")')
-props.append("default_font_size = 26")
+props.append("default_font_size = 24")
 
-button("Button", "#f5a623", "#c77c0c", "#3e2415", "#ffffff")
-props.append("Button/font_sizes/font_size = 26")
-for name, bg, edge in [("GreenButton", "#43a047", "#2e7d32"), ("BlueButton", "#3498db", "#217dbb"),
-                       ("RedButton", "#c0392b", "#962d22")]:
+# ---- Nút bấm nổi khối
+button("Button", "#d97706", "#92400e", "#fffdf0", "#451a03")
+props.append("Button/font_sizes/font_size = 24")
+
+for name, bg, edge, outl in [
+    ("GreenButton", "#15803d", "#14532d", "#052e16"),
+    ("BlueButton", "#0284c7", "#075985", "#082f49"),
+    ("RedButton", "#b91c1c", "#7f1d1d", "#450a0a")
+]:
     props.append('%s/base_type = &"Button"' % name)
-    button(name, bg, edge, "#ffffff", "#3e2415")
+    button(name, bg, edge, "#fffdf0", outl)
+
 props.append('IconButton/base_type = &"Button"')
 props.append('IconButton/styles/normal = %s' % empty())
 props.append('IconButton/styles/hover = %s' % empty())
 props.append('IconButton/styles/pressed = %s' % empty())
 props.append('IconButton/styles/disabled = %s' % empty())
 props.append('IconButton/styles/focus = %s' % empty())
+
 props.append('TabButton/base_type = &"Button"')
 props.append('TabButton/styles/normal = %s' % empty())
 props.append('TabButton/styles/hover = %s' % empty())
 props.append('TabButton/styles/pressed = %s' % empty())
 props.append('TabButton/styles/focus = %s' % empty())
 for k in ("font_color", "font_hover_color", "font_pressed_color", "font_focus_color"):
-    props.append('TabButton/colors/%s = %s' % (k, col("#ffffff")))
-props.append('TabButton/colors/font_outline_color = %s' % col("#3e2415"))
-props.append('TabButton/constants/outline_size = 6')
-props.append('TabButton/font_sizes/font_size = 20')
+    props.append('TabButton/colors/%s = %s' % (k, col("#fffdf0")))
+props.append('TabButton/colors/font_outline_color = %s' % col("#2b1307"))
+props.append('TabButton/constants/outline_size = 5')
+props.append('TabButton/font_sizes/font_size = 18')
 
-# ---- khung kiểu game mobile Quán Trọ Đông Dương (Ấm áp, viền gỗ mộc, giấy ngà)
+# ---- KHUNG GIAO DIỆN (Tránh hoàn toàn màu trắng bệt!)
+# 1. Đế điều hướng đáy (NavBar): Gỗ gụ trầm viền chỉ vàng kim
+props.append('NavBar/base_type = &"PanelContainer"')
+props.append('NavBar/styles/panel = %s' % sb("#1d0d06", 0, "#d97706", (0, 2, 0, 0), (8, 6, 8, 10), (0.35, 14, -3),
+                                             radius_each=(22, 22, 0, 0)))
+
+# 2. Ô đếm tiền / kim cương (CounterBar): Vỏ gỗ trầm trong mờ, viền chỉ đồng sang trọng
 props.append('CounterBar/base_type = &"PanelContainer"')
-props.append('CounterBar/styles/panel = %s' % sb("#fffdf8", 26, "#8c5836", (2, 2, 2, 4), (46, 2, 16, 4), (0.16, 6, 2)))
-props.append('LevelPill/base_type = &"PanelContainer"')
-props.append('LevelPill/styles/panel = %s' % sb("#fffdf8", 22, "#8c5836", (2, 2, 2, 4), (8, 2, 12, 4), (0.16, 6, 2)))
-props.append('StatusBanner/base_type = &"PanelContainer"')
-props.append('StatusBanner/styles/panel = %s' % sb("#4a7c59", 20, "#2d5238", (2, 2, 2, 4), (16, 4, 16, 6), (0.16, 6, 3)))
-props.append('SidePanel/base_type = &"PanelContainer"')
-props.append('SidePanel/styles/panel = %s' % empty())
-props.append('AreaPill/base_type = &"PanelContainer"')
-props.append('AreaPill/styles/panel = %s' % sb("#fffdf8", 26, "#8c5836", (2, 2, 2, 4), (18, 4, 18, 6), (0.16, 6, 3)))
+props.append('CounterBar/styles/panel = %s' % sb("#221008", 24, "#b45309", (1, 1, 1, 3), (44, 2, 14, 4), (0.22, 6, 2), alpha=0.88))
 
-# Cột thẻ nổi bên phải (SideCard)
+# 3. Huy hiệu Cấp độ (LevelPill): Gỗ sậm viền đồng
+props.append('LevelPill/base_type = &"PanelContainer"')
+props.append('LevelPill/styles/panel = %s' % sb("#221008", 20, "#b45309", (1, 1, 1, 3), (8, 2, 10, 4), (0.22, 6, 2), alpha=0.88))
+
+# 4. Biển hiệu Tên Khu Vực (AreaPill): Biển gỗ chạm trổ viền đồng vàng kim
+props.append('AreaPill/base_type = &"PanelContainer"')
+props.append('AreaPill/styles/panel = %s' % sb("#381a0e", 22, "#d97706", (2, 2, 2, 4), (18, 4, 18, 6), (0.32, 10, 4)))
+
+# 5. Cột thẻ menu nổi (SideCard): Thẻ gỗ treo có viền đồng
 props.append('SideCard/base_type = &"Button"')
-props.append('SideCard/styles/normal = %s' % sb("#fffdf8", 18, "#8c5836", (2, 2, 2, 4), (6, 6, 6, 6), (0.16, 6, 3)))
-props.append('SideCard/styles/hover = %s' % sb("#ffffff", 18, "#f5a623", (2, 2, 2, 4), (6, 6, 6, 6), (0.22, 8, 4)))
-props.append('SideCard/styles/pressed = %s' % sb("#f4e8d3", 18, "#633c22", (2, 4, 2, 2), (6, 8, 6, 4), (0.10, 4, 2)))
-props.append('SideCard/styles/disabled = %s' % sb("#e8e1d7", 18, "#c4b9ab", (2, 2, 2, 4), (6, 6, 6, 6)))
+props.append('SideCard/styles/normal = %s' % sb("#34180c", 18, "#b45309", (1, 1, 1, 3), (6, 6, 6, 6), (0.24, 8, 3)))
+props.append('SideCard/styles/hover = %s' % sb("#452010", 18, "#f59e0b", (1, 1, 1, 3), (6, 6, 6, 6), (0.30, 10, 4)))
+props.append('SideCard/styles/pressed = %s' % sb("#241008", 18, "#78350f", (1, 3, 1, 1), (6, 8, 6, 4), (0.12, 4, 2)))
+props.append('SideCard/styles/disabled = %s' % sb("#2d1810", 18, "#542c17", (1, 1, 1, 3), (6, 6, 6, 6), alpha=0.6))
 props.append('SideCard/styles/focus = %s' % empty())
 for k in ("font_color", "font_hover_color", "font_pressed_color", "font_focus_color"):
-    props.append('SideCard/colors/%s = %s' % (k, col("#3e2415")))
-props.append('SideCard/font_sizes/font_size = 15')
+    props.append('SideCard/colors/%s = %s' % (k, col("#fffaf0")))
+props.append('SideCard/colors/font_outline_color = %s' % col("#1a0a04"))
+props.append('SideCard/constants/outline_size = 4')
+props.append('SideCard/font_sizes/font_size = 14')
 
-props.append('RoundNav/base_type = &"Button"')
-for st in ("normal", "hover", "pressed"):
-    props.append('RoundNav/styles/%s = %s' % (st, sb("#fffdf8" if st != "pressed" else "#fbe6da", 60, "#c0392b",
-                                                    (3, 3, 3, 6), (6, 6, 6, 8), (0.24, 8, 5))))
-props.append('RoundNav/styles/focus = %s' % empty())
-for k in ("font_color", "font_hover_color", "font_pressed_color", "font_focus_color"):
-    props.append('RoundNav/colors/%s = %s' % (k, col("#c0392b")))
-props.append('RoundNav/colors/font_outline_color = %s' % col("#fffaf2"))
-props.append('RoundNav/constants/outline_size = 6')
-props.append('RoundNav/font_sizes/font_size = 24')
-props.append('RoundNav/constants/icon_max_width = 92')
+# 6. Dải trạng thái đặc biệt (StatusBanner)
+props.append('StatusBanner/base_type = &"PanelContainer"')
+props.append('StatusBanner/styles/panel = %s' % sb("#14532d", 20, "#16a34a", (2, 2, 2, 4), (16, 4, 16, 6), (0.25, 8, 3)))
+props.append('SidePanel/base_type = &"PanelContainer"')
+props.append('SidePanel/styles/panel = %s' % empty())
 
-# ---- chữ
-props.append('Label/colors/font_color = %s' % col("#3e2415"))
-props.append('Label/colors/font_outline_color = %s' % col("#7a4b3a"))
-props.append('Label/constants/line_spacing = 0')
-props.append('TitleLabel/base_type = &"Label"')
-props.append('TitleLabel/colors/font_color = %s' % col("#ffffff"))
-props.append('TitleLabel/colors/font_outline_color = %s' % col("#3e2415"))
-props.append('TitleLabel/constants/outline_size = 10')
-props.append('TitleLabel/font_sizes/font_size = 38')
-props.append('HeaderLabel/base_type = &"Label"')
-props.append('HeaderLabel/colors/font_color = %s' % col("#c0392b"))
-props.append('HeaderLabel/font_sizes/font_size = 28')
-props.append('SmallLabel/base_type = &"Label"')
-props.append('SmallLabel/colors/font_color = %s' % col("#7a523a"))
-props.append('SmallLabel/font_sizes/font_size = 20')
-props.append('GreenLabel/base_type = &"Label"')
-props.append('GreenLabel/colors/font_color = %s' % col("#2e7d32"))
-props.append('GreenLabel/font_sizes/font_size = 22')
-props.append('WhiteLabel/base_type = &"Label"')
-props.append('WhiteLabel/colors/font_color = %s' % col("#ffffff"))
-props.append('WhiteLabel/colors/font_outline_color = %s' % col("#3e2415"))
-props.append('WhiteLabel/constants/outline_size = 8')
-
-# Chữ cho số tài nguyên & trạng thái
-props.append('ResourceLabel/base_type = &"Label"')
-props.append('ResourceLabel/colors/font_color = %s' % col("#301a0e"))
-props.append('ResourceLabel/font_sizes/font_size = 26')
-props.append('StatusLabel/base_type = &"Label"')
-props.append('StatusLabel/colors/font_color = %s' % col("#ffffff"))
-props.append('StatusLabel/colors/font_outline_color = %s' % col("#1e3b25"))
-props.append('StatusLabel/constants/outline_size = 4')
-props.append('StatusLabel/font_sizes/font_size = 18')
-props.append('SideLabel/base_type = &"Label"')
-props.append('SideLabel/colors/font_color = %s' % col("#4a2810"))
-props.append('SideLabel/font_sizes/font_size = 15')
-props.append('NavLabel/base_type = &"Label"')
-props.append('NavLabel/colors/font_color = %s' % col("#4a2810"))
-props.append('NavLabel/font_sizes/font_size = 16')
-
-# ---- khung
-card = sb("#fdfbf6", 24, "#dfcaa7", (2, 2, 2, 4), (16, 14, 16, 14), (0.14, 8, 4))
-props.append('PanelContainer/styles/panel = %s' % card)
+# 7. Thẻ nội dung thông thường (Card): Giấy ngà ấm cổ truyền (Parchment), KHÔNG dùng màu trắng bệt
+props.append('PanelContainer/styles/panel = %s' % sb("#f7efe0", 22, "#cfbc9e", (2, 2, 2, 4), (16, 14, 16, 14), (0.12, 7, 3)))
 props.append('Card/base_type = &"PanelContainer"')
-props.append('Card/styles/panel = %s' % sb("#fdfbf6", 24, "#dfcaa7", (2, 2, 2, 4), (16, 14, 16, 14), (0.14, 8, 4)))
+props.append('Card/styles/panel = %s' % sb("#f7efe0", 22, "#cfbc9e", (2, 2, 2, 4), (16, 14, 16, 14), (0.12, 7, 3)))
+
+# 8. Thẻ tối mờ (CardDim)
 props.append('CardDim/base_type = &"PanelContainer"')
-props.append('CardDim/styles/panel = %s' % sb("#f4ede2", 24, "#d0beaa", (2, 2, 2, 3), (16, 14, 16, 14), (0.10, 5, 3)))
-props.append('Pill/base_type = &"PanelContainer"')
-props.append('Pill/styles/panel = %s' % sb("#fffdf8", 36, "#8c5836", (2, 2, 2, 3), (10, 4, 18, 4), (0.16, 5, 3)))
+props.append('CardDim/styles/panel = %s' % sb("#ecdfc8", 22, "#beaa8f", (2, 2, 2, 3), (16, 14, 16, 14), (0.08, 4, 2)))
+
+# 9. Tấm bảng cuộn nội dung Tab (Sheet)
 props.append('Sheet/base_type = &"PanelContainer"')
-props.append('Sheet/styles/panel = %s' % sb("#fdfbf6", 0, "#8c5836", (0, 4, 0, 0), (16, 14, 16, 12), (0.24, 12, 0),
-                                              radius_each=(32, 32, 0, 0)))
-props.append('NavBar/base_type = &"PanelContainer"')
-props.append('NavBar/styles/panel = %s' % sb("#382013", 0, "#d49a43", (0, 3, 0, 0), (8, 6, 8, 10), (0.26, 12, -2),
-                                               radius_each=(26, 26, 0, 0)))
+props.append('Sheet/styles/panel = %s' % sb("#f7efe0", 0, "#92400e", (0, 3, 0, 0), (16, 14, 16, 12), (0.26, 12, 0),
+                                            radius_each=(28, 28, 0, 0)))
+
+# 10. Khung Popup chính (PopupCard): Cuộn chiếu chỉ hoàng gia / Gỗ gụ viền vàng
 props.append('PopupCard/base_type = &"PanelContainer"')
-props.append('PopupCard/styles/panel = %s' % sb("#fdfbf6", 32, "#5d3820", (5, 5, 5, 6), (22, 18, 22, 22), (0.34, 20, 8)))
+props.append('PopupCard/styles/panel = %s' % sb("#fbf6ea", 28, "#451a03", (4, 4, 4, 7), (20, 16, 20, 20), (0.42, 22, 8)))
+
+# 11. Tiêu đề Popup (PopupHeader): Sơn mài Chu Sa viền vàng
 props.append('PopupHeader/base_type = &"PanelContainer"')
-props.append('PopupHeader/styles/panel = %s' % sb("#c0392b", 22, "#e6ad45", (3, 3, 3, 6), (22, 6, 22, 8)))
+props.append('PopupHeader/styles/panel = %s' % sb("#881337", 20, "#f59e0b", (2, 2, 2, 5), (20, 6, 20, 8), (0.25, 8, 3)))
+
+# 12. Huy hiệu đỏ (Badge)
 props.append('Badge/base_type = &"PanelContainer"')
-props.append('Badge/styles/panel = %s' % sb("#c0392b", 18, "#ffffff", (2, 2, 2, 2), (8, 0, 8, 2), (0.20, 4, 2)))
+props.append('Badge/styles/panel = %s' % sb("#b91c1c", 16, "#fef08a", (1.5, 1.5, 1.5, 2), (8, 0, 8, 2), (0.22, 4, 2)))
+
+# 13. Hộp thông báo nhanh (Toast)
 props.append('Toast/base_type = &"PanelContainer"')
-props.append('Toast/styles/panel = %s' % sb("#3a2012", 28, "#e6ad45", (2, 2, 2, 3), (26, 12, 26, 14), (0.30, 8, 4), alpha=0.95))
+props.append('Toast/styles/panel = %s' % sb("#2b1207", 26, "#f59e0b", (2, 2, 2, 3), (24, 10, 24, 12), (0.35, 10, 4), alpha=0.96))
+
+# 14. Vùng nổi bật (Highlight): Lụa vàng hoàng triều
 props.append('Highlight/base_type = &"PanelContainer"')
-props.append('Highlight/styles/panel = %s' % sb("#fff6d6", 22, "#e6a839", (2, 2, 2, 4), (12, 8, 12, 8)))
+props.append('Highlight/styles/panel = %s' % sb("#fef3c7", 20, "#d97706", (2, 2, 2, 3), (12, 8, 12, 8)))
 
-# ---- thanh tiến độ
-props.append('ProgressBar/styles/background = %s' % sb("#7a4b3a", 12, None, margin=(0, 0, 0, 0), alpha=0.25))
-props.append('ProgressBar/styles/fill = %s' % sb("#8fd18a", 12, "#5aa86a", (0, 0, 0, 3), (0, 0, 0, 0)))
-props.append('ProgressBar/font_sizes/font_size = 18')
-props.append('ProgressBar/colors/font_color = %s' % col("#ffffff"))
-props.append('ProgressBar/colors/font_outline_color = %s' % col("#7a4b3a"))
-props.append('ProgressBar/constants/outline_size = 5')
+# 15. Viên tròn kiểu Pill
+props.append('Pill/base_type = &"PanelContainer"')
+props.append('Pill/styles/panel = %s' % sb("#381a0e", 32, "#b45309", (1.5, 1.5, 1.5, 3), (10, 4, 18, 4), (0.18, 5, 3)))
+
+# ---- PHÔNG CHỮ & MÀU SẮC
+props.append('Label/colors/font_color = %s' % col("#381a0e"))
+props.append('Label/colors/font_outline_color = %s' % col("#fef3c7"))
+props.append('Label/constants/line_spacing = 0')
+
+props.append('TitleLabel/base_type = &"Label"')
+props.append('TitleLabel/colors/font_color = %s' % col("#fffdf0"))
+props.append('TitleLabel/colors/font_outline_color = %s' % col("#450a0a"))
+props.append('TitleLabel/constants/outline_size = 8')
+props.append('TitleLabel/font_sizes/font_size = 34')
+
+props.append('HeaderLabel/base_type = &"Label"')
+props.append('HeaderLabel/colors/font_color = %s' % col("#991b1b"))
+props.append('HeaderLabel/font_sizes/font_size = 26')
+
+props.append('SmallLabel/base_type = &"Label"')
+props.append('SmallLabel/colors/font_color = %s' % col("#713f12"))
+props.append('SmallLabel/font_sizes/font_size = 18')
+
+props.append('GreenLabel/base_type = &"Label"')
+props.append('GreenLabel/colors/font_color = %s' % col("#15803d"))
+props.append('GreenLabel/font_sizes/font_size = 22')
+
+props.append('WhiteLabel/base_type = &"Label"')
+props.append('WhiteLabel/colors/font_color = %s' % col("#fffdf0"))
+props.append('WhiteLabel/colors/font_outline_color = %s' % col("#2b1207"))
+props.append('WhiteLabel/constants/outline_size = 6')
+
+# Chữ cho số tiền & tài nguyên (màu vàng kim ấm)
+props.append('ResourceLabel/base_type = &"Label"')
+props.append('ResourceLabel/colors/font_color = %s' % col("#fef3c7"))
+props.append('ResourceLabel/colors/font_outline_color = %s' % col("#1a0802"))
+props.append('ResourceLabel/constants/outline_size = 4')
+props.append('ResourceLabel/font_sizes/font_size = 24')
+
+props.append('StatusLabel/base_type = &"Label"')
+props.append('StatusLabel/colors/font_color = %s' % col("#f0fdf4"))
+props.append('StatusLabel/colors/font_outline_color = %s' % col("#052e16"))
+props.append('StatusLabel/constants/outline_size = 4')
+props.append('StatusLabel/font_sizes/font_size = 16')
+
+props.append('SideLabel/base_type = &"Label"')
+props.append('SideLabel/colors/font_color = %s' % col("#fffaf0"))
+props.append('SideLabel/colors/font_outline_color = %s' % col("#1d0d06"))
+props.append('SideLabel/constants/outline_size = 4')
+props.append('SideLabel/font_sizes/font_size = 14')
+
+props.append('NavLabel/base_type = &"Label"')
+props.append('NavLabel/colors/font_color = %s' % col("#d4bda4"))
+props.append('NavLabel/colors/font_outline_color = %s' % col("#140702"))
+props.append('NavLabel/constants/outline_size = 3')
+props.append('NavLabel/font_sizes/font_size = 14')
+
+# ---- THANH TIẾN ĐỘ
+props.append('ProgressBar/styles/background = %s' % sb("#2b1307", 10, None, margin=(0, 0, 0, 0), alpha=0.35))
+props.append('ProgressBar/styles/fill = %s' % sb("#16a34a", 10, "#14532d", (0, 0, 0, 2), (0, 0, 0, 0)))
+props.append('ProgressBar/font_sizes/font_size = 16')
+props.append('ProgressBar/colors/font_color = %s' % col("#fffdf0"))
+props.append('ProgressBar/colors/font_outline_color = %s' % col("#052e16"))
+props.append('ProgressBar/constants/outline_size = 4')
+
 props.append('ExpBar/base_type = &"ProgressBar"')
-props.append('ExpBar/styles/background = %s' % sb("#3e2415", 8, "#8c5836", (1, 1, 1, 1), margin=(0, 0, 0, 0), alpha=0.45))
-props.append('ExpBar/styles/fill = %s' % sb("#f5a623", 8, "#c77c0c", (0, 0, 0, 2), margin=(0, 0, 0, 0)))
+props.append('ExpBar/styles/background = %s' % sb("#1d0b04", 6, "#542813", (1, 1, 1, 1), margin=(0, 0, 0, 0), alpha=0.7))
+props.append('ExpBar/styles/fill = %s' % sb("#f59e0b", 6, "#b45309", (0, 0, 0, 1), margin=(0, 0, 0, 0)))
 
-# ---- cuộn
-props.append('VScrollBar/styles/scroll = %s' % sb("#000000", 6, None, margin=(4, 0, 4, 0), alpha=0.06))
-props.append('VScrollBar/styles/grabber = %s' % sb("#ecc9ad", 6, None, margin=(4, 0, 4, 0)))
-props.append('VScrollBar/styles/grabber_highlight = %s' % sb("#e2b494", 6, None, margin=(4, 0, 4, 0)))
-props.append('VScrollBar/styles/grabber_pressed = %s' % sb("#d6a07e", 6, None, margin=(4, 0, 4, 0)))
-
-# ---- CheckButton
-props.append('CheckButton/colors/font_color = %s' % col("#6f4636"))
-props.append('CheckButton/colors/font_hover_color = %s' % col("#6f4636"))
-props.append('CheckButton/colors/font_pressed_color = %s' % col("#6f4636"))
-props.append('CheckButton/colors/font_hover_pressed_color = %s' % col("#6f4636"))
-props.append('CheckButton/colors/font_focus_color = %s' % col("#6f4636"))
-props.append('CheckButton/styles/focus = %s' % empty())
-props.append('CheckButton/styles/normal = %s' % empty())
-props.append('CheckButton/styles/hover = %s' % empty())
-props.append('CheckButton/styles/pressed = %s' % empty())
+# ---- THANH CUỘN
+props.append('VScrollBar/styles/scroll = %s' % sb("#000000", 6, None, margin=(4, 0, 4, 0), alpha=0.08))
+props.append('VScrollBar/styles/grabber = %s' % sb("#cfbc9e", 6, None, margin=(4, 0, 4, 0)))
+props.append('VScrollBar/styles/grabber_highlight = %s' % sb("#bda380", 6, None, margin=(4, 0, 4, 0)))
+props.append('VScrollBar/styles/grabber_pressed = %s' % sb("#9d815d", 6, None, margin=(4, 0, 4, 0)))
 
 lines = ['[gd_resource type="Theme" load_steps=%d format=3]' % (len(subs) + 3), "",
          '[ext_resource type="FontFile" path="res://assets/fonts/Baloo2.ttf" id="1_font"]', "",
@@ -240,4 +269,4 @@ for sid, typ, p in subs:
 lines.append("[resource]")
 lines += props
 OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
-print("theme ok:", len(subs), "styleboxes")
+print("Theme rebuilt successfully:", len(subs), "styleboxes.")
